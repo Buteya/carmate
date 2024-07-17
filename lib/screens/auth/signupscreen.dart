@@ -54,7 +54,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 16.0),
                       child: Text(
-                        'Welcome to carmate, an application that helps you get the car you need at the press of a button.',
+                        'Welcome to Carmate, an application that helps you get the car you need at the press of a button.',
                         style: GoogleFonts.roboto(
                           fontSize: 17,
                         ),
@@ -87,7 +87,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       obscureText: false,
                     ),
                     FormInput(
-                      obscureText: false,
+                      obscureText: true,
                       labelText: 'Password',
                       hintText: 'Enter your password',
                       validationFunction: (value) {
