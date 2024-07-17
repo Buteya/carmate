@@ -50,7 +50,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         padding: EdgeInsets.all(8.0),
                         child: Icon(
                           Icons.person,
-                          size: 144,
+                          size: 192,
                           color: Colors.deepPurpleAccent,
                         ),
                       ),
