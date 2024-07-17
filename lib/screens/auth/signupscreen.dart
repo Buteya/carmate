@@ -26,6 +26,10 @@ class _SignupScreenState extends State<SignupScreen> {
             margin: EdgeInsets.all(30.0),
             child: Column(
               children: [
+                const Card.filled(child: Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Icon(Icons.car_rental_rounded,opticalSize: 96,),
+                ),),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 16.0),
                   child: Text(
