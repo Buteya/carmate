@@ -20,56 +20,66 @@ class _SignupScreenState extends State<SignupScreen> {
     return Scaffold(
       body: Form(
         key: _formKey,
-        child: Column(
-          children: [
-            FormInput(
-              inputController: _usernameController,
-              labelText: 'Username',
-              hintText: 'Enter your username',
-              validationFunction: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter some text';
-                }
-              },
-              obscureText: false,
+        child: Card(
+          child: Container(
+            margin: EdgeInsets.all(30.0),
+            child: Column(
+              children: [
+                Text('Signup'),
+                Text('Welcome to carmate, an application that helps you to get the car you want at the click of a button.'),
+                FormInput(
+                  inputController: _usernameController,
+                  labelText: 'Username',
+                  hintText: 'Enter your username',
+                  validationFunction: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a username';
+                    }
+                    return null;
+                  },
+                  obscureText: false,
+                ),
+                FormInput(
+                  inputController: _emailController,
+                  labelText: 'Email',
+                  hintText: 'Enter your email',
+                  validationFunction: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "please enter your email";
+                    } else if (!value.contains("@")) {
+                      return "please enter a valid email";
+                    }
+                    return null;
+                  },
+                  obscureText: false,
+                ),
+                FormInput(
+                  obscureText: false,
+                  labelText: 'Password',
+                  hintText: 'Enter your password',
+                  validationFunction: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "please enter your password";
+                    } else if (value.length < 8) {
+                      return "password must be at least 8 characters long";
+                    }
+                    return null;
+                  },
+                  inputController: _passwordController,
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    // Validate will return true if the form is valid, or false if
+                    // the form is invalid.
+                    if (_formKey.currentState!.validate()) {
+                      // Process data.
+                    }
+                  },
+                  child: const Text('Signup'),
+                ),
+              ],
             ),
-            FormInput(
-              inputController: _emailController,
-              labelText: 'Email',
-              hintText: 'Enter your email',
-              validationFunction: (value) {
-                if (value == null || value.isEmpty) {
-                  return "please enter your email";
-                } else if (!value.contains("@")) {
-                  return "please enter a valid email";
-                }
-              },
-              obscureText: false,
-            ),
-            FormInput(
-              obscureText: false,
-              labelText: 'Password',
-              hintText: 'Enter your password',
-              validationFunction: (value) {
-                if (value == null || value.isEmpty) {
-                  return "please enter your password";
-                } else if (value.length < 8) {
-                  return "password must be at least 8 characters long";
-                }
-              },
-              inputController: _passwordController,
-            ),
-            ElevatedButton(
-              onPressed: () {
-                // Validate will return true if the form is valid, or false if
-                // the form is invalid.
-                if (_formKey.currentState!.validate()) {
-                  // Process data.
-                }
-              },
-              child: const Text('Signup'),
-            ),
-          ],
+          ),
         ),
       ),
     );

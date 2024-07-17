@@ -7,28 +7,25 @@ class FormInput extends StatelessWidget {
     required this.labelText,
     required this.hintText,
     required this.validationFunction,
-    required TextEditingController inputController,
-  }) : _usernameController = inputController;
+    required this.inputController,
+  });
 
-  final TextEditingController _usernameController;
+  final TextEditingController inputController;
   final String? labelText;
   final String? hintText;
-  final Function validationFunction;
+  final String? Function(String?) validationFunction;
   final bool obscureText;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       obscureText: obscureText,
-      controller: _usernameController,
+      controller: inputController,
       decoration:  InputDecoration(
         labelText: labelText,
         hintText: hintText,
       ),
-      validator: (String? value) {
-
-        return null;
-      },
+      validator: validationFunction,
     );
   }
 }
