@@ -95,6 +95,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           // the form is invalid.
                           if (_formKey.currentState!.validate()) {
                             // Process data.
+                            if(mounted){
+                              Navigator.pushReplacementNamed(context, '/profile');
+                            }
                           }
                         },
                         child: const Text('Login'),
