@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../../components/forminput.dart';
 
@@ -25,8 +26,27 @@ class _SignupScreenState extends State<SignupScreen> {
             margin: EdgeInsets.all(30.0),
             child: Column(
               children: [
-                Text('Signup'),
-                Text('Welcome to carmate, an application that helps you to get the car you want at the click of a button.'),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16.0),
+                  child: Text(
+                    'Signup',
+                    style: GoogleFonts.lato(
+                      textStyle: Theme.of(context).textTheme.displayLarge,
+                      fontSize: 48,
+                      fontWeight: FontWeight.w700,
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16.0),
+                  child: Text(
+                    'Welcome to carmate, an application that helps you get the car you need at the press of a button.',
+                    style: GoogleFonts.roboto(
+                      fontSize: 17,
+                    ),
+                  ),
+                ),
                 FormInput(
                   inputController: _usernameController,
                   labelText: 'Username',
@@ -67,15 +87,26 @@ class _SignupScreenState extends State<SignupScreen> {
                   },
                   inputController: _passwordController,
                 ),
-                ElevatedButton(
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 24.0),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      // Validate will return true if the form is valid, or false if
+                      // the form is invalid.
+                      if (_formKey.currentState!.validate()) {
+                        // Process data.
+                      }
+                    },
+                    child: const Text('Signup'),
+                  ),
+                ),
+                TextButton(
                   onPressed: () {
-                    // Validate will return true if the form is valid, or false if
-                    // the form is invalid.
-                    if (_formKey.currentState!.validate()) {
-                      // Process data.
+                    if (mounted) {
+                      Navigator.pushNamed(context, '/login');
                     }
                   },
-                  child: const Text('Signup'),
+                  child: const Text("already have an account? login here!!!"),
                 ),
               ],
             ),
