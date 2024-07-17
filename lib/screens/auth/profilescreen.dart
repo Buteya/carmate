@@ -130,19 +130,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 24.0),
-                      child: Column(
-                        children: [
-                          const Padding(
-                            padding: EdgeInsets.all(16.0),
-                            child: Text('This button below will log you out of your account.'),
-                          ),
-                          ElevatedButton(
-                            onPressed: () {
+                      child: Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            children: [
+                              const Padding(
+                                padding: EdgeInsets.all(16.0),
+                                child: Text('This button below will log you out of your account.'),
+                              ),
+                              ElevatedButton(
+                                onPressed: () {
 
-                            },
-                            child: const Text('Logout'),
+                                },
+                                child: const Text('Logout'),
+                              ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
                     ),
                    Card(
