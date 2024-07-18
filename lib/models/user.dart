@@ -1,6 +1,9 @@
 import 'dart:collection';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uuid/uuid.dart';
 
 class User extends ChangeNotifier {
   final String id;
@@ -29,13 +32,14 @@ class User extends ChangeNotifier {
     required this.imageUrl,
   });
 
+
   void add(User user) {
     _users.add(user);
     // This call tells the widgets that are listening to this model to rebuild.
     notifyListeners();
   }
 
-  void removeUser(int index){
+  void removeUser(int index) {
     final user = _users.elementAt(index);
     _users.remove(user);
     notifyListeners();
