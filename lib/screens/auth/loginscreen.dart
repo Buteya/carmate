@@ -1,7 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../components/forminput.dart';
+import '../../models/user.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -14,6 +19,63 @@ class _LoginScreenState extends State<LoginScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
+  void _login(String email, String password) async {
+    User? users = Provider.of<User>(context, listen: false);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? encodedPassword;
+    User? checkEmail;
+    String? prefEmail;
+    String? decodedPassword;
+
+    try{
+      encodedPassword = prefs.getString('password');
+      checkEmail = users.users.firstWhere((user) => user.email == email);
+      prefEmail = prefs.getString('email');
+      decodedPassword = utf8.decode(base64.decode(encodedPassword!));
+    }catch (e){
+      print(e.toString());
+    }
+    if (email == prefEmail) {
+      if (password == decodedPassword) {
+        if (mounted) {
+          if(email == checkEmail?.email){
+            Navigator.pushReplacementNamed(context, '/profile');
+          }
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              backgroundColor: Colors.deepPurple,
+              content: Text(
+                'Welcome!!!',
+                style: GoogleFonts.roboto(
+                  fontSize: 17,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          );
+          print('welcome');
+        }
+      }
+    } else {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: Colors.deepPurple,
+            content: Text(
+              'User not found!!!',
+              style: GoogleFonts.roboto(
+                fontSize: 17,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        );
+      }
+      print('User not found');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -95,9 +157,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           // the form is invalid.
                           if (_formKey.currentState!.validate()) {
                             // Process data.
-                            if(mounted){
-                              Navigator.pushReplacementNamed(context, '/profile');
-                            }
+                            _login(_emailController.text,
+                                _passwordController.text);
                           }
                         },
                         child: const Text('Login'),
@@ -110,7 +171,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         }
                       },
                       child:
-                      const Text("don`t have an account? signup here!!!"),
+                          const Text("don`t have an account? signup here!!!"),
                     ),
                     TextButton(
                       onPressed: () {
@@ -118,8 +179,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           Navigator.pushNamed(context, '/passwordreset');
                         }
                       },
-                      child:
-                      const Text("forgot password?"),
+                      child: const Text("forgot password?"),
                     ),
                   ],
                 ),
