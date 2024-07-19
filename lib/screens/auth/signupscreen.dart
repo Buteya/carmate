@@ -35,7 +35,7 @@ class _SignupScreenState extends State<SignupScreen> {
       await prefs.setString('username', '$username');
       await prefs.setString('email', '$email');
       await prefs.setString('password', '$encodedPassword');
-    }while (prefs.getString('id')!.isEmpty);
+    } while (prefs.getString('id')!.isEmpty);
 
     users.add(
       User(
@@ -168,6 +168,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         return null;
                       },
                       obscureText: false,
+
                     ),
                     FormInput(
                       inputController: _emailController,
@@ -182,6 +183,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         return null;
                       },
                       obscureText: false,
+
                     ),
                     FormInput(
                       obscureText: true,
@@ -196,6 +198,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         return null;
                       },
                       inputController: _passwordController,
+
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 24.0),

@@ -92,7 +92,7 @@ class _PasswordResetScreenState extends State<PasswordResetScreen> {
                         }
                       },
                       child:
-                      const Text("don`t have an account? signup here!!!"),
+                          const Text("don`t have an account? signup here!!!"),
                     ),
                   ],
                 ),

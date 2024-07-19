@@ -28,18 +28,18 @@ class _LoginScreenState extends State<LoginScreen> {
     String? prefEmail;
     String? decodedPassword;
 
-    try{
+    try {
       encodedPassword = prefs.getString('password');
       checkEmail = users.users.firstWhere((user) => user.email == email);
       prefEmail = prefs.getString('email');
       decodedPassword = utf8.decode(base64.decode(encodedPassword!));
-    }catch (e){
+    } catch (e) {
       print(e.toString());
     }
     if (email == prefEmail) {
       if (password == decodedPassword) {
         if (mounted) {
-          if(email == checkEmail?.email){
+          if (email == checkEmail?.email) {
             Navigator.pushReplacementNamed(context, '/profile');
           }
 
