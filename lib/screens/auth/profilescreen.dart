@@ -1,7 +1,10 @@
+
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
 
 import '../../components/badroute.dart';
 import '../../components/forminput.dart';
@@ -17,17 +20,55 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   User? currentUser;
+  bool _isLoading = false;
+
+  @override
+  void initState() {
+    try {
+      currentUser = Provider.of<User>(context, listen: false).users.last;
+      print(Provider.of<User>(context, listen: false).users.length);
+    } catch (e) {
+      print(e.toString());
+    }
+    super.initState();
+  }
 
   void _logout() {
+    setState(() {
+      _isLoading = true;
+    });
     if (currentUser != null) {
+      setState(() {
+        _isLoading = false;
+      });
       Navigator.pushReplacementNamed(context, '/login');
+    }
+    print("called");
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.deepPurple,
+          content: Text(
+            'You`ve been logged out successfully!!!',
+            style: GoogleFonts.roboto(
+              fontSize: 17,
+              color: Colors.white,
+            ),
+          ),
+        ),
+      );
     }
   }
 
   void _update(String username, String firstname, String lastname,
       String mobileNumber, String country) {
     final user = Provider.of<User>(context, listen: false);
+
+    setState(() {
+      _isLoading = true;
+    });
     print(user.users.length);
+
     if (currentUser != null) {
       user.updateUser(
         User(
@@ -42,8 +83,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             imageUrl: currentUser!.imageUrl),
       );
     }
-    final newUser = Provider.of<User>(context,listen:false);
-    for(final user in newUser.users){
+    final newUser = Provider.of<User>(context, listen: false);
+    for (final user in newUser.users) {
       print(user.id);
       print(user.username);
       print(user.firstname);
@@ -52,219 +93,323 @@ class _ProfileScreenState extends State<ProfileScreen> {
       print(user.country);
       print(user.imageUrl);
     }
+    if (user.users.last.id == newUser.users.last.id) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: Colors.deepPurple,
+            content: Text(
+              'updated successfully!!!',
+              style: GoogleFonts.roboto(
+                fontSize: 17,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        );
+      }
+    } else {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: Colors.deepPurple,
+            content: Text(
+              'unable to update!!!',
+              style: GoogleFonts.roboto(
+                fontSize: 17,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        );
+      }
+    }
+    setState(() {
+      _isLoading = false;
+    });
   }
 
-  @override
-  void initState() {
-    super.initState();
-    try {
-      currentUser = Provider.of<User>(context, listen: false).users.last;
-      print(Provider.of<User>(context, listen: false).users.length);
-    } catch (e) {
-      print(e.toString());
-    }
+  Future<void> _showDismissConfirmationDialog(
+      BuildContext context,
+      Function() function,
+      String title,
+      String content,
+      String actionButtonText) async {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(content),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+            ),
+            TextButton(
+              child: Text(actionButtonText),
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+                // Perform the dismissal logic here
+                function();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
+
 
   @override
   Widget build(BuildContext context) {
     return currentUser == null
         ? const BadRoute()
-        : Scaffold(
-            body: SingleChildScrollView(
-              child: Form(
-                key: _formKey,
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Card(
-                    child: Container(
-                      margin: const EdgeInsets.all(30.0),
-                      child: Consumer<User>(
-                        builder: (context, user, child) {
-                          final currentUserId = user.users.last.id;
-                          var currentUsername = user.users.last.username;
-                          var currentUserFirstname = user.users.last.firstname;
-                          var currentUserLastname = user.users.last.lastname;
-                          var currentUserMobileNumber= user.users.last.mobilenumber;
-                          var currentUserCountry = user.users.last.country;
-                          final currentUserImageUrl = user.users.last.imageUrl;
-                          for(final newuser in user.users){
-                            print(newuser.id);
-                            print(newuser.username);
-                            print(newuser.firstname);
-                            print(newuser.lastname);
-                            print(newuser.mobilenumber);
-                            print(newuser.country);
-                            print(newuser.imageUrl);
-                          }
+        : _isLoading
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
+            : Scaffold(
+                body: SingleChildScrollView(
+                  child: Form(
+                    key: _formKey,
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Card(
+                        child: Container(
+                          margin: const EdgeInsets.all(30.0),
+                          child: Consumer<User>(
+                            builder: (context, user, child) {
+                              final currentUserId = user.users.last.id;
+                              var currentUsername = user.users.last.username;
+                              var currentUserFirstname =
+                                  user.users.last.firstname;
+                              var currentUserLastname =
+                                  user.users.last.lastname;
+                              var currentUserMobileNumber =
+                                  user.users.last.mobilenumber;
+                              var currentUserCountry = user.users.last.country;
+                              var currentUserImageUrl =
+                                  user.users.last.imageUrl;
+                              for (final newuser in user.users) {
+                                print(newuser.id);
+                                print(newuser.username);
+                                print(newuser.firstname);
+                                print(newuser.lastname);
+                                print(newuser.mobilenumber);
+                                print(newuser.country);
+                                print(newuser.imageUrl);
+                              }
 
-                          return Column(
-                            children: [
-                              Text('user: ${user.users.last.username}'),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 16.0),
-                                child: Text(
-                                  'Profile',
-                                  style: GoogleFonts.lato(
-                                    textStyle: Theme.of(context)
-                                        .textTheme
-                                        .displayLarge,
-                                    fontSize: 48,
-                                    fontWeight: FontWeight.w700,
-                                    fontStyle: FontStyle.italic,
-                                  ),
-                                ),
-                              ),
-                              const Card.filled(
-                                child: Padding(
-                                  padding: EdgeInsets.all(8.0),
-                                  child: Icon(
-                                    Icons.person,
-                                    size: 192,
-                                    color: Colors.deepPurpleAccent,
-                                  ),
-                                ),
-                              ),
-                              FormInput(
-                                initialValue: currentUsername,
-                                onChangedFunction: (value)=> currentUsername = value!,
-                                labelText: 'Username',
-                                hintText: user.users.isNotEmpty
-                                    ? user.users.last.username
-                                    : 'Enter your username',
-                                validationFunction: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return "please enter your username";
-                                  }
-                                  return null;
-                                },
-                                obscureText: false,
-                              ),
-                              FormInput(
-                                initialValue: currentUserFirstname,
-                                onChangedFunction: (value)=>currentUserFirstname=value!,
-                                labelText: 'Firstname',
-                                hintText: 'Enter your firstname',
-                                validationFunction: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return "please enter your firstname";
-                                  }
-                                  return null;
-                                },
-                                obscureText: false,
-                              ),
-                              FormInput(
-                                initialValue: currentUserLastname,
-                                onChangedFunction: (value)=>currentUserLastname=value!,
-                                labelText: 'Lastname',
-                                hintText: 'Enter your lastname',
-                                validationFunction: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return "please enter your lastname";
-                                  }
-                                  return null;
-                                },
-                                obscureText: false,
-                              ),
-                              FormInput(
-                                initialValue: currentUserMobileNumber,
-                                onChangedFunction: (value)=>currentUserMobileNumber =value!,
-                                labelText: 'Mobile-Number',
-                                hintText: 'Enter your mobile-number',
-                                validationFunction: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return "please enter your mobile-number";
-                                  }
-                                  return null;
-                                },
-                                obscureText: false,
-                              ),
-                              FormInput(
-                                initialValue: currentUserCountry,
-                                onChangedFunction: (value)=>currentUserCountry=value!,
-                                labelText: 'Country',
-                                hintText: 'Enter your country',
-                                validationFunction: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return "please enter your country";
-                                  }
-                                  return null;
-                                },
-                                obscureText: false,
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 24.0),
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    // Validate will return true if the form is valid, or false if
-                                    // the form is invalid.
-                                    if (_formKey.currentState!.validate()) {
-                                      // Process data.
-                                      _update(currentUsername, currentUserFirstname, currentUserLastname, currentUserMobileNumber, currentUserCountry);
-                                    }
-                                  },
-                                  child: const Text('Update'),
-                                ),
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 24.0),
-                                child: Card(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(16.0),
-                                    child: Column(
-                                      children: [
-                                        const Padding(
-                                          padding: EdgeInsets.all(16.0),
-                                          child: Text(
-                                              'This button below will log you out of your account.'),
-                                        ),
-                                        ElevatedButton(
-                                          onPressed: () {
-                                            _logout();
-                                          },
-                                          child: const Text('Logout'),
-                                        ),
-                                      ],
+                              return Column(
+                                children: [
+                                  Text('user: ${user.users.last.username}'),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 16.0),
+                                    child: Text(
+                                      'Profile',
+                                      style: GoogleFonts.lato(
+                                        textStyle: Theme.of(context)
+                                            .textTheme
+                                            .displayLarge,
+                                        fontSize: 48,
+                                        fontWeight: FontWeight.w700,
+                                        fontStyle: FontStyle.italic,
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ),
-                              Card(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(16.0),
-                                  child: Column(
-                                    children: [
-                                      const Text(
-                                          'The button below permanently deletes your account and all your data will be lost.'
-                                          'If you are sure you want to delete your account press the button below.'),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 24.0),
-                                        child: ElevatedButton(
-                                          style: ElevatedButton.styleFrom(
-                                            backgroundColor: Colors
-                                                .red, // Set the background color to red
-                                            foregroundColor: Colors.black,
-                                          ),
-                                          onPressed: () {},
-                                          child: const Text('Delete Account'),
+                                  Card.filled(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(16.0),
+                                      child: currentUserImageUrl.isNotEmpty
+                                          ? Image.asset(
+                                        fit: BoxFit.cover,
+                                              currentUserImageUrl,
+                                            )
+                                          : const Icon(
+                                              Icons.person,
+                                              size: 192,
+                                              color: Colors.deepPurpleAccent,
+                                            ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: ElevatedButton.icon(
+                                        onPressed: () async{
+                                          final pickedImage =
+                                              await ImagePicker().pickImage(source: ImageSource.gallery);
+                                              setState(() {
+                                                currentUserImageUrl = pickedImage!.path;
+                                              });
+                                        },
+                                        label: const Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Text("change Image"),
+                                            Icon(Icons.camera),
+                                          ],
+                                        ),),
+                                  ),
+                                  FormInput(
+                                    initialValue: currentUsername,
+                                    onChangedFunction: (value) =>
+                                        currentUsername = value!,
+                                    labelText: 'Username',
+                                    hintText: user.users.isNotEmpty
+                                        ? user.users.last.username
+                                        : 'Enter your username',
+                                    validationFunction: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return "please enter your username";
+                                      }
+                                      return null;
+                                    },
+                                    obscureText: false,
+                                  ),
+                                  FormInput(
+                                    initialValue: currentUserFirstname,
+                                    onChangedFunction: (value) =>
+                                        currentUserFirstname = value!,
+                                    labelText: 'Firstname',
+                                    hintText: 'Enter your firstname',
+                                    validationFunction: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return "please enter your firstname";
+                                      }
+                                      return null;
+                                    },
+                                    obscureText: false,
+                                  ),
+                                  FormInput(
+                                    initialValue: currentUserLastname,
+                                    onChangedFunction: (value) =>
+                                        currentUserLastname = value!,
+                                    labelText: 'Lastname',
+                                    hintText: 'Enter your lastname',
+                                    validationFunction: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return "please enter your lastname";
+                                      }
+                                      return null;
+                                    },
+                                    obscureText: false,
+                                  ),
+                                  FormInput(
+                                    initialValue: currentUserMobileNumber,
+                                    onChangedFunction: (value) =>
+                                        currentUserMobileNumber = value!,
+                                    labelText: 'Mobile-Number',
+                                    hintText: 'Enter your mobile-number',
+                                    validationFunction: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return "please enter your mobile-number";
+                                      }
+                                      return null;
+                                    },
+                                    obscureText: false,
+                                  ),
+                                  FormInput(
+                                    initialValue: currentUserCountry,
+                                    onChangedFunction: (value) =>
+                                        currentUserCountry = value!,
+                                    labelText: 'Country',
+                                    hintText: 'Enter your country',
+                                    validationFunction: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return "please enter your country";
+                                      }
+                                      return null;
+                                    },
+                                    obscureText: false,
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 24.0),
+                                    child: ElevatedButton(
+                                      onPressed: () {
+                                        // Validate will return true if the form is valid, or false if
+                                        // the form is invalid.
+                                        if (_formKey.currentState!.validate()) {
+                                          // Process data.
+                                          _update(
+                                              currentUsername,
+                                              currentUserFirstname,
+                                              currentUserLastname,
+                                              currentUserMobileNumber,
+                                              currentUserCountry);
+                                        }
+                                      },
+                                      child: const Text('Update'),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 24.0),
+                                    child: Card(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(16.0),
+                                        child: Column(
+                                          children: [
+                                            const Padding(
+                                              padding: EdgeInsets.all(16.0),
+                                              child: Text(
+                                                  'This button below will log you out of your account.'),
+                                            ),
+                                            ElevatedButton(
+                                              onPressed: () {
+                                                _showDismissConfirmationDialog(
+                                                    context,
+                                                    _logout,
+                                                    'Logout',
+                                                    'Are you sure you want to logout?',
+                                                    'Logout');
+                                              },
+                                              child: const Text('Logout'),
+                                            ),
+                                          ],
                                         ),
                                       ),
-                                    ],
+                                    ),
                                   ),
-                                ),
-                              ),
-                            ],
-                          );
-                        },
+                                  Card(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(16.0),
+                                      child: Column(
+                                        children: [
+                                          const Text(
+                                              'The button below permanently deletes your account and all your data will be lost.'
+                                              'If you are sure you want to delete your account press the button below.'),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 24.0),
+                                            child: ElevatedButton(
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor: Colors
+                                                    .red, // Set the background color to red
+                                                foregroundColor: Colors.black,
+                                              ),
+                                              onPressed: () {},
+                                              child:
+                                                  const Text('Delete Account'),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          ),
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            ),
-          );
+              );
   }
 }
