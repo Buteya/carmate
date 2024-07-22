@@ -255,7 +255,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               const EdgeInsets.only(left: 50.0, right: 50.0),
                           child: Card.filled(
                             child: Padding(
-                                padding: const EdgeInsets.all(2.0),
+                                padding: const EdgeInsets.all(8.0),
                                 child: imageAvailable!.isNotEmpty
                                     ? Image.network(imageAvailable!,height:400)
                                     : currentUser!.imageUrl.isNotEmpty
