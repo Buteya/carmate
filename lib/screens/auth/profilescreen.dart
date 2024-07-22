@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
@@ -250,18 +252,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                         Padding(
                           padding:
-                              const EdgeInsets.only(left: 200.0, right: 200.0),
+                              const EdgeInsets.only(left: 50.0, right: 50.0),
                           child: Card.filled(
                             child: Padding(
-                                padding: const EdgeInsets.all(16.0),
+                                padding: const EdgeInsets.all(2.0),
                                 child: imageAvailable!.isNotEmpty
-                                    ? Image.network(imageAvailable!)
+                                    ? Image.network(imageAvailable!,height:400)
                                     : currentUser!.imageUrl.isNotEmpty
-                                        ? Image.network(currentUser!.imageUrl)
+                                        ? Image.network(currentUser!.imageUrl,height:400)
                                         : const Icon(
                                             Icons.person_add_alt_rounded,
                                             size: 60,
-                                          )),
+                                          ),),
                           ),
                         ),
                         Padding(
