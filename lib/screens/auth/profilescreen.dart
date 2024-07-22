@@ -1,10 +1,7 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-
 
 import '../../components/badroute.dart';
 import '../../components/forminput.dart';
@@ -21,6 +18,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   User? currentUser;
   bool _isLoading = false;
+  String? imageAvailable = '';
 
   @override
   void initState() {
@@ -60,8 +58,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-  void _update(String username, String firstname, String lastname,
-      String mobileNumber, String country) {
+  void _update(
+    String username,
+    String firstname,
+    String lastname,
+    String mobileNumber,
+    String country,
+  ) {
     final user = Provider.of<User>(context, listen: false);
 
     setState(() {
@@ -80,7 +83,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             lastname: lastname,
             mobilenumber: mobileNumber,
             country: country,
-            imageUrl: currentUser!.imageUrl),
+            imageUrl: imageAvailable!),
       );
     }
     final newUser = Provider.of<User>(context, listen: false);
@@ -162,7 +165,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
     return currentUser == null
@@ -173,240 +175,324 @@ class _ProfileScreenState extends State<ProfileScreen> {
               )
             : Scaffold(
                 body: SingleChildScrollView(
-                  child: Form(
-                    key: _formKey,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Card(
-                        child: Container(
-                          margin: const EdgeInsets.all(30.0),
-                          child: Consumer<User>(
-                            builder: (context, user, child) {
-                              final currentUserId = user.users.last.id;
-                              var currentUsername = user.users.last.username;
-                              var currentUserFirstname =
-                                  user.users.last.firstname;
-                              var currentUserLastname =
-                                  user.users.last.lastname;
-                              var currentUserMobileNumber =
-                                  user.users.last.mobilenumber;
-                              var currentUserCountry = user.users.last.country;
-                              var currentUserImageUrl =
-                                  user.users.last.imageUrl;
-                              for (final newuser in user.users) {
-                                print(newuser.id);
-                                print(newuser.username);
-                                print(newuser.firstname);
-                                print(newuser.lastname);
-                                print(newuser.mobilenumber);
-                                print(newuser.country);
-                                print(newuser.imageUrl);
-                              }
-
-                              return Column(
-                                children: [
-                                  Text('user: ${user.users.last.username}'),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 16.0),
-                                    child: Text(
-                                      'Profile',
-                                      style: GoogleFonts.lato(
-                                        textStyle: Theme.of(context)
-                                            .textTheme
-                                            .displayLarge,
-                                        fontSize: 48,
-                                        fontWeight: FontWeight.w700,
-                                        fontStyle: FontStyle.italic,
-                                      ),
-                                    ),
-                                  ),
-                                  Card.filled(
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(16.0),
-                                      child: currentUserImageUrl.isNotEmpty
-                                          ? Image.asset(
-                                        fit: BoxFit.cover,
-                                              currentUserImageUrl,
-                                            )
-                                          : const Icon(
-                                              Icons.person,
-                                              size: 192,
-                                              color: Colors.deepPurpleAccent,
-                                            ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: ElevatedButton.icon(
-                                        onPressed: () async{
-                                          final pickedImage =
-                                              await ImagePicker().pickImage(source: ImageSource.gallery);
-                                              setState(() {
-                                                currentUserImageUrl = pickedImage!.path;
-                                              });
-                                        },
-                                        label: const Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Text("change Image"),
-                                            Icon(Icons.camera),
-                                          ],
-                                        ),),
-                                  ),
-                                  FormInput(
-                                    initialValue: currentUsername,
-                                    onChangedFunction: (value) =>
-                                        currentUsername = value!,
-                                    labelText: 'Username',
-                                    hintText: user.users.isNotEmpty
-                                        ? user.users.last.username
-                                        : 'Enter your username',
-                                    validationFunction: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return "please enter your username";
-                                      }
-                                      return null;
-                                    },
-                                    obscureText: false,
-                                  ),
-                                  FormInput(
-                                    initialValue: currentUserFirstname,
-                                    onChangedFunction: (value) =>
-                                        currentUserFirstname = value!,
-                                    labelText: 'Firstname',
-                                    hintText: 'Enter your firstname',
-                                    validationFunction: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return "please enter your firstname";
-                                      }
-                                      return null;
-                                    },
-                                    obscureText: false,
-                                  ),
-                                  FormInput(
-                                    initialValue: currentUserLastname,
-                                    onChangedFunction: (value) =>
-                                        currentUserLastname = value!,
-                                    labelText: 'Lastname',
-                                    hintText: 'Enter your lastname',
-                                    validationFunction: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return "please enter your lastname";
-                                      }
-                                      return null;
-                                    },
-                                    obscureText: false,
-                                  ),
-                                  FormInput(
-                                    initialValue: currentUserMobileNumber,
-                                    onChangedFunction: (value) =>
-                                        currentUserMobileNumber = value!,
-                                    labelText: 'Mobile-Number',
-                                    hintText: 'Enter your mobile-number',
-                                    validationFunction: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return "please enter your mobile-number";
-                                      }
-                                      return null;
-                                    },
-                                    obscureText: false,
-                                  ),
-                                  FormInput(
-                                    initialValue: currentUserCountry,
-                                    onChangedFunction: (value) =>
-                                        currentUserCountry = value!,
-                                    labelText: 'Country',
-                                    hintText: 'Enter your country',
-                                    validationFunction: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return "please enter your country";
-                                      }
-                                      return null;
-                                    },
-                                    obscureText: false,
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 24.0),
-                                    child: ElevatedButton(
-                                      onPressed: () {
-                                        // Validate will return true if the form is valid, or false if
-                                        // the form is invalid.
-                                        if (_formKey.currentState!.validate()) {
-                                          // Process data.
-                                          _update(
-                                              currentUsername,
-                                              currentUserFirstname,
-                                              currentUserLastname,
-                                              currentUserMobileNumber,
-                                              currentUserCountry);
-                                        }
-                                      },
-                                      child: const Text('Update'),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 24.0),
-                                    child: Card(
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(16.0),
-                                        child: Column(
-                                          children: [
-                                            const Padding(
-                                              padding: EdgeInsets.all(16.0),
-                                              child: Text(
-                                                  'This button below will log you out of your account.'),
-                                            ),
-                                            ElevatedButton(
-                                              onPressed: () {
-                                                _showDismissConfirmationDialog(
-                                                    context,
-                                                    _logout,
-                                                    'Logout',
-                                                    'Are you sure you want to logout?',
-                                                    'Logout');
-                                              },
-                                              child: const Text('Logout'),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Card(
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(16.0),
-                                      child: Column(
-                                        children: [
-                                          const Text(
-                                              'The button below permanently deletes your account and all your data will be lost.'
-                                              'If you are sure you want to delete your account press the button below.'),
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 24.0),
-                                            child: ElevatedButton(
-                                              style: ElevatedButton.styleFrom(
-                                                backgroundColor: Colors
-                                                    .red, // Set the background color to red
-                                                foregroundColor: Colors.black,
+                  child: Card(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Card(
+                                child: Row(
+                                  children: [
+                                    currentUser!.imageUrl.isEmpty
+                                        ? Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: imageAvailable!.isNotEmpty
+                                                ? CircleAvatar(
+                                                    child: Container(
+                                                      width:
+                                                          100, // Adjust the size as needed
+                                                      height: 100,
+                                                      decoration: BoxDecoration(
+                                                        shape: BoxShape.circle,
+                                                        image: DecorationImage(
+                                                          fit: BoxFit.cover,
+                                                          image: NetworkImage(
+                                                              imageAvailable!),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  )
+                                                : const CircleAvatar(
+                                                    child: Icon(Icons.person),
+                                                  ),
+                                          )
+                                        : Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: CircleAvatar(
+                                               child: Container(
+                                              width:
+                                              100, // Adjust the size as needed
+                                              height: 100,
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                image: DecorationImage(
+                                                  fit: BoxFit.cover,
+                                                  image: NetworkImage(
+                                                      currentUser!.imageUrl),
+                                                ),
                                               ),
-                                              onPressed: () {},
-                                              child:
-                                                  const Text('Delete Account'),
+                                            ),
                                             ),
                                           ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              );
-                            },
+                                    Text('welcome ${currentUser?.username}  '),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 16.0),
+                          child: Text(
+                            'Profile',
+                            style: GoogleFonts.lato(
+                              textStyle:
+                                  Theme.of(context).textTheme.displayLarge,
+                              fontSize: 48,
+                              fontWeight: FontWeight.w700,
+                              fontStyle: FontStyle.italic,
+                            ),
                           ),
                         ),
-                      ),
+                        Padding(
+                          padding:
+                              const EdgeInsets.only(left: 200.0, right: 200.0),
+                          child: Card.filled(
+                            child: Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: imageAvailable!.isNotEmpty
+                                    ? Image.network(imageAvailable!)
+                                    : currentUser!.imageUrl.isNotEmpty
+                                        ? Image.network(currentUser!.imageUrl)
+                                        : const Icon(
+                                            Icons.person_add_alt_rounded,
+                                            size: 60,
+                                          )),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: ElevatedButton.icon(
+                            onPressed: () async {
+                              final pickedImage = await ImagePicker()
+                                  .pickImage(source: ImageSource.gallery);
+                              if (pickedImage != null) {
+                                setState(() {
+                                  print(pickedImage.name);
+                                  print(pickedImage.path);
+                                  imageAvailable = pickedImage.path;
+                                  print(imageAvailable);
+                                });
+                                for (final user in currentUser!.users) {
+                                  print('image ${user.imageUrl}');
+                                }
+                              } else {
+                                // Handle the case where the user canceled image selection
+                                // (e.g., show a message or revert to a default image)
+                              }
+                            },
+                            label: const Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text("change Image"),
+                                Icon(Icons.camera),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Form(
+                          key: _formKey,
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Card(
+                              child: Container(
+                                margin: const EdgeInsets.all(30.0),
+                                child: Consumer<User>(
+                                  builder: (context, user, child) {
+                                    var currentUsername =
+                                        user.users.last.username;
+                                    var currentUserFirstname =
+                                        user.users.last.firstname;
+                                    var currentUserLastname =
+                                        user.users.last.lastname;
+                                    var currentUserMobileNumber =
+                                        user.users.last.mobilenumber;
+                                    var currentUserCountry =
+                                        user.users.last.country;
+                                    for (final newuser in user.users) {
+                                      print(newuser.id);
+                                      print(newuser.username);
+                                      print(newuser.firstname);
+                                      print(newuser.lastname);
+                                      print(newuser.mobilenumber);
+                                      print(newuser.country);
+                                      print(newuser.imageUrl);
+                                    }
+
+                                    return Column(
+                                      children: [
+                                        FormInput(
+                                          initialValue: currentUsername,
+                                          onChangedFunction: (value) =>
+                                              currentUsername = value!,
+                                          labelText: 'Username',
+                                          hintText: user.users.isNotEmpty
+                                              ? user.users.last.username
+                                              : 'Enter your username',
+                                          validationFunction: (value) {
+                                            if (value == null ||
+                                                value.isEmpty) {
+                                              return "please enter your username";
+                                            }
+                                            return null;
+                                          },
+                                          obscureText: false,
+                                        ),
+                                        FormInput(
+                                          initialValue: currentUserFirstname,
+                                          onChangedFunction: (value) =>
+                                              currentUserFirstname = value!,
+                                          labelText: 'Firstname',
+                                          hintText: 'Enter your firstname',
+                                          validationFunction: (value) {
+                                            if (value == null ||
+                                                value.isEmpty) {
+                                              return "please enter your firstname";
+                                            }
+                                            return null;
+                                          },
+                                          obscureText: false,
+                                        ),
+                                        FormInput(
+                                          initialValue: currentUserLastname,
+                                          onChangedFunction: (value) =>
+                                              currentUserLastname = value!,
+                                          labelText: 'Lastname',
+                                          hintText: 'Enter your lastname',
+                                          validationFunction: (value) {
+                                            if (value == null ||
+                                                value.isEmpty) {
+                                              return "please enter your lastname";
+                                            }
+                                            return null;
+                                          },
+                                          obscureText: false,
+                                        ),
+                                        FormInput(
+                                          initialValue: currentUserMobileNumber,
+                                          onChangedFunction: (value) =>
+                                              currentUserMobileNumber = value!,
+                                          labelText: 'Mobile-Number',
+                                          hintText: 'Enter your mobile-number',
+                                          validationFunction: (value) {
+                                            if (value == null ||
+                                                value.isEmpty) {
+                                              return "please enter your mobile-number";
+                                            }
+                                            return null;
+                                          },
+                                          obscureText: false,
+                                        ),
+                                        FormInput(
+                                          initialValue: currentUserCountry,
+                                          onChangedFunction: (value) =>
+                                              currentUserCountry = value!,
+                                          labelText: 'Country',
+                                          hintText: 'Enter your country',
+                                          validationFunction: (value) {
+                                            if (value == null ||
+                                                value.isEmpty) {
+                                              return "please enter your country";
+                                            }
+                                            return null;
+                                          },
+                                          obscureText: false,
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 24.0),
+                                          child: ElevatedButton(
+                                            onPressed: () {
+                                              // Validate will return true if the form is valid, or false if
+                                              // the form is invalid.
+                                              if (_formKey.currentState!
+                                                  .validate()) {
+                                                // Process data.
+                                                _update(
+                                                  currentUsername,
+                                                  currentUserFirstname,
+                                                  currentUserLastname,
+                                                  currentUserMobileNumber,
+                                                  currentUserCountry,
+                                                );
+                                              }
+                                            },
+                                            child: const Text('Update'),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 24.0),
+                                          child: Card(
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(16.0),
+                                              child: Column(
+                                                children: [
+                                                  const Padding(
+                                                    padding:
+                                                        EdgeInsets.all(16.0),
+                                                    child: Text(
+                                                        'This button below will log you out of your account.'),
+                                                  ),
+                                                  ElevatedButton(
+                                                    onPressed: () {
+                                                      _showDismissConfirmationDialog(
+                                                          context,
+                                                          _logout,
+                                                          'Logout',
+                                                          'Are you sure you want to logout?',
+                                                          'Logout');
+                                                    },
+                                                    child: const Text('Logout'),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        Card(
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(16.0),
+                                            child: Column(
+                                              children: [
+                                                const Text(
+                                                    'The button below permanently deletes your account and all your data will be lost.'
+                                                    'If you are sure you want to delete your account press the button below.'),
+                                                Padding(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                      vertical: 24.0),
+                                                  child: ElevatedButton(
+                                                    style: ElevatedButton
+                                                        .styleFrom(
+                                                      backgroundColor: Colors
+                                                          .red, // Set the background color to red
+                                                      foregroundColor:
+                                                          Colors.black,
+                                                    ),
+                                                    onPressed: () {},
+                                                    child: const Text(
+                                                        'Delete Account'),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
