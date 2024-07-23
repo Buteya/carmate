@@ -1,8 +1,10 @@
 import 'package:carmate/components/forminput.dart';
+import 'package:carmate/models/productcar.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../components/badroute.dart';
 import '../../models/user.dart';
@@ -32,6 +34,7 @@ class _CreateProductCarScreenState extends State<CreateProductCarScreen> {
   User? currentUser;
   bool _isLoading = false;
   bool _carImagePicked = true;
+  final uuid = const Uuid();
 
   @override
   void initState() {
@@ -63,6 +66,41 @@ class _CreateProductCarScreenState extends State<CreateProductCarScreen> {
     _carTypeController.dispose();
     _carDescriptionController.dispose();
     super.dispose();
+  }
+
+  void _addProductCar() {
+    final carProducts =
+        Provider.of<ProductCar>(context, listen: false);
+    final id = uuid.v4();
+    if(currentUser?.id != null ){
+      carProducts.add(
+        ProductCar(
+          carImage: carImage!,
+          userId: currentUser!.id,
+          id: id,
+          manufacturer: _carManufacturerController.text,
+          carName: _carNameController.text,
+          engineType: _engineTypeController.text,
+          engineCC: _carEngineCCController.text,
+          fuelType: _carFuelTypeController.text,
+          mileage: _carMileageController.text,
+          price: int.tryParse(_carPriceController.text)!,
+          rentPerHr: int.tryParse(_carRentPerHrController.text)!,
+          carType: _carTypeController.text,
+          description: _carDescriptionController.text,
+        ),
+      );
+    }else{
+      print('no current user');
+    }
+   for(final product in carProducts.productCars){
+     print(product.id);
+     print(product.userId);
+     print(product.carImage);
+     print(product.description);
+     print(product.price);
+     print(product.rentPerHr);
+   }
   }
 
   @override
@@ -303,6 +341,7 @@ class _CreateProductCarScreenState extends State<CreateProductCarScreen> {
                                                 setState(() {
                                                   _carImagePicked = true;
                                                 });
+                                                _addProductCar();
                                               } else {
                                                 setState(() {
                                                   _carImagePicked = false;
