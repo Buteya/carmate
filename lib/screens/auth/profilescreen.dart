@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 import '../../components/badroute.dart';
+import '../../components/customtitle.dart';
 import '../../components/forminput.dart';
 import '../../models/user.dart';
 
@@ -176,67 +177,77 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: CircularProgressIndicator(),
               )
             : Scaffold(
+                appBar: AppBar(
+                  centerTitle: true,
+                  title: const CustomTitle(color: Colors.deepPurpleAccent,),
+                ),
+                drawer: Drawer(
+                  child: ListView(
+                    padding: EdgeInsets.zero,
+                    children: [
+                      DrawerHeader(
+                        decoration: const BoxDecoration(
+                          color: Colors.deepPurpleAccent,
+                        ),
+                        child: Column(
+                          children: [
+                            const CustomTitle(color: Colors.purple,),
+                            CircleAvatar(
+                              radius: 27,
+                              child: Container(
+                                width:
+                                40, // Adjust the size as needed
+                                height: 40,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  image: DecorationImage(
+                                    fit: BoxFit.cover,
+                                    image: NetworkImage(
+                                        imageAvailable!),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Text('Welcome, ${currentUser!.username[0].toUpperCase()+currentUser!.username.substring(1).toLowerCase()}'),
+                          ],
+                        ),
+                      ),
+                      const Padding(
+                        padding: const EdgeInsets.only(left:8.0,),
+                        child: Text('Admin'),
+                      ),
+                      const Divider(indent:50.0,color: Colors.black,thickness: 1.0,endIndent: 10,),
+                      ListTile(
+                        title: const Text('Create Product car'),
+                        subtitle: const Text('Add a new car to the product cartlogue'),
+                        trailing: const Icon(Icons.add_circle_rounded),
+                        onTap: () {
+                          // Handle item 1 tap
+                          if(mounted){
+                            Navigator.pushReplacementNamed(context, '/createproductcar');
+                          }
+                        },
+                      ),
+                      ListTile(
+                        title: Text('Item 2'),
+                        onTap: () {
+                          // Handle item 2 tap
+                        },
+                      ),
+                    ],
+                  ),
+                ),
                 body: SingleChildScrollView(
                   child: Card(
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Card(
-                                child: Row(
-                                  children: [
-                                    currentUser!.imageUrl.isEmpty
-                                        ? Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: imageAvailable!.isNotEmpty
-                                                ? CircleAvatar(
-                                                    child: Container(
-                                                      width:
-                                                          100, // Adjust the size as needed
-                                                      height: 100,
-                                                      decoration: BoxDecoration(
-                                                        shape: BoxShape.circle,
-                                                        image: DecorationImage(
-                                                          fit: BoxFit.cover,
-                                                          image: NetworkImage(
-                                                              imageAvailable!),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  )
-                                                : const CircleAvatar(
-                                                    child: Icon(Icons.person),
-                                                  ),
-                                          )
-                                        : Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: CircleAvatar(
-                                               child: Container(
-                                              width:
-                                              100, // Adjust the size as needed
-                                              height: 100,
-                                              decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                image: DecorationImage(
-                                                  fit: BoxFit.cover,
-                                                  image: NetworkImage(
-                                                      currentUser!.imageUrl),
-                                                ),
-                                              ),
-                                            ),
-                                            ),
-                                          ),
-                                    Text('welcome ${currentUser?.username}  '),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                        // Row(
+                        //   mainAxisAlignment: MainAxisAlignment.end,
+                        //   children: [
+                        //     CurrentUserCard(currentUser: currentUser, imageAvailable: imageAvailable),
+                        //   ],
+                        // ),
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 16.0),
                           child: Text(
@@ -255,15 +266,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               const EdgeInsets.only(left: 50.0, right: 50.0),
                           child: Card.filled(
                             child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: imageAvailable!.isNotEmpty
-                                    ? Image.network(imageAvailable!,height:400)
-                                    : currentUser!.imageUrl.isNotEmpty
-                                        ? Image.network(currentUser!.imageUrl,height:400)
-                                        : const Icon(
-                                            Icons.person_add_alt_rounded,
-                                            size: 60,
-                                          ),),
+                              padding: const EdgeInsets.all(8.0),
+                              child: imageAvailable!.isNotEmpty
+                                  ? Image.network(imageAvailable!, height: 400)
+                                  : currentUser!.imageUrl.isNotEmpty
+                                      ? Image.network(currentUser!.imageUrl,
+                                          height: 400)
+                                      : const Icon(
+                                          Icons.person_add_alt_rounded,
+                                          size: 60,
+                                        ),
+                            ),
                           ),
                         ),
                         Padding(
@@ -501,3 +514,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
               );
   }
 }
+
+
+
