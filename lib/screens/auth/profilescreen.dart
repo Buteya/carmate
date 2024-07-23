@@ -1,4 +1,4 @@
-import 'dart:io';
+
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -22,6 +22,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   User? currentUser;
   bool _isLoading = false;
   String? imageAvailable = '';
+  bool _imagepicked = true;
 
   @override
   void initState() {
@@ -179,7 +180,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
             : Scaffold(
                 appBar: AppBar(
                   centerTitle: true,
-                  title: const CustomTitle(color: Colors.deepPurpleAccent,),
+                  title: const CustomTitle(
+                    color: Colors.deepPurpleAccent,
+                  ),
                 ),
                 drawer: Drawer(
                   child: ListView(
@@ -191,40 +194,64 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                         child: Column(
                           children: [
-                            const CustomTitle(color: Colors.purple,),
+                            const CustomTitle(
+                              color: Colors.purple,
+                            ),
                             CircleAvatar(
                               radius: 27,
-                              child: Container(
-                                width:
-                                40, // Adjust the size as needed
-                                height: 40,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  image: DecorationImage(
-                                    fit: BoxFit.cover,
-                                    image: NetworkImage(
-                                        imageAvailable!),
-                                  ),
-                                ),
-                              ),
+                              child: imageAvailable!.isNotEmpty
+                                  ? Container(
+                                      width: 40, // Adjust the size as needed
+                                      height: 40,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        image: DecorationImage(
+                                          fit: BoxFit.cover,
+                                          image: NetworkImage(imageAvailable!),
+                                        ),
+                                      ),
+                                    )
+                                  : Container(
+                                      width: 40, // Adjust the size as needed
+                                      height: 40,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        image: DecorationImage(
+                                          fit: BoxFit.cover,
+                                          image: NetworkImage(
+                                              currentUser!.imageUrl),
+                                        ),
+                                      ),
+                                    ),
                             ),
-                            Text('Welcome, ${currentUser!.username[0].toUpperCase()+currentUser!.username.substring(1).toLowerCase()}'),
+                            Text(softWrap: true,
+                                maxLines: 1,
+                                'Welcome, ${currentUser!.username[0].toUpperCase() + currentUser!.username.substring(1).toLowerCase()}'),
                           ],
                         ),
                       ),
                       const Padding(
-                        padding: const EdgeInsets.only(left:8.0,),
+                        padding: const EdgeInsets.only(
+                          left: 8.0,
+                        ),
                         child: Text('Admin'),
                       ),
-                      const Divider(indent:50.0,color: Colors.black,thickness: 1.0,endIndent: 10,),
+                      const Divider(
+                        indent: 50.0,
+                        color: Colors.black,
+                        thickness: 1.0,
+                        endIndent: 10,
+                      ),
                       ListTile(
                         title: const Text('Create Product car'),
-                        subtitle: const Text('Add a new car to the product cartlogue'),
+                        subtitle: const Text(
+                            'Add a new car to the product cartlogue'),
                         trailing: const Icon(Icons.add_circle_rounded),
                         onTap: () {
                           // Handle item 1 tap
-                          if(mounted){
-                            Navigator.pushReplacementNamed(context, '/createproductcar');
+                          if (mounted) {
+                            Navigator.pushReplacementNamed(
+                                context, '/createproductcar');
                           }
                         },
                       ),
@@ -309,6 +336,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                           ),
                         ),
+                        _imagepicked == false && currentUser!.imageUrl.isEmpty
+                            ? const Text(
+                                'you must pick an image',
+                                style: TextStyle(
+                                  color: Colors.red,
+                                  fontSize: 12,
+                                ),
+                              )
+                            : const SizedBox(),
                         Form(
                           key: _formKey,
                           child: Padding(
@@ -425,7 +461,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                               // Validate will return true if the form is valid, or false if
                                               // the form is invalid.
                                               if (_formKey.currentState!
-                                                  .validate()) {
+                                                      .validate() &&
+                                                  imageAvailable!.isNotEmpty) {
+                                                setState(() {
+                                                  _imagepicked = true;
+                                                });
                                                 // Process data.
                                                 _update(
                                                   currentUsername,
@@ -434,6 +474,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                   currentUserMobileNumber,
                                                   currentUserCountry,
                                                 );
+                                              } else {
+                                                setState(() {
+                                                  _imagepicked = false;
+                                                });
                                               }
                                             },
                                             child: const Text('Update'),
@@ -514,6 +558,3 @@ class _ProfileScreenState extends State<ProfileScreen> {
               );
   }
 }
-
-
-

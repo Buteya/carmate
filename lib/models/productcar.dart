@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'package:flutter/material.dart';
 
 class ProductCar extends ChangeNotifier {
+  final String userId;
   final String id;
   final String manufacturer;
   final String carName;
@@ -23,6 +24,7 @@ class ProductCar extends ChangeNotifier {
       UnmodifiableListView(_productCars);
 
   ProductCar({
+    required this.userId,
     required this.id,
     required this.manufacturer,
     required this.carName,
