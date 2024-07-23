@@ -23,6 +23,14 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final uuid = const Uuid();
 
+  @override
+  void dispose() {
+    _usernameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
   void _signup(String username, String email, String password) async {
     final users = Provider.of<User>(context, listen: false);
     final encodedPassword = base64.encode(utf8.encode(password));
@@ -164,6 +172,8 @@ class _SignupScreenState extends State<SignupScreen> {
                       validationFunction: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter a username';
+                        }else if(value.length > 12){
+                          return "username is too long must be less than 12 characters";
                         }
                         return null;
                       },

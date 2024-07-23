@@ -20,6 +20,13 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
   void _login(String email, String password) async {
     User? users = Provider.of<User>(context, listen: false);
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -130,6 +137,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           return "please enter your email";
                         } else if (!value.contains("@")) {
                           return "please enter a valid email";
+                        } else if(value != Provider.of<User>(context,listen: false).users.last.email){
+                          return "email not found,email provided might be wrong";
                         }
                         return null;
                       },
@@ -144,6 +153,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           return "please enter your password";
                         } else if (value.length < 8) {
                           return "password must be at least 8 characters long";
+                        } else if (value != utf8.decode(base64.decode(Provider.of<User>(context,listen: false).users.last.password))){
+                          return "passwords don`t match";
                         }
                         return null;
                       },

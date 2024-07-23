@@ -34,9 +34,10 @@ void main() {
         fuelType: '',
         mileage: '',
         price: 0,
-        rentPerHr: '',
+        rentPerHr: 0,
         carType: '',
         description: '',
+        carImage: '',
       ),
     ),
   ], child: const MyApp()));

@@ -22,7 +22,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   User? currentUser;
   bool _isLoading = false;
   String? imageAvailable = '';
-  bool _imagepicked = true;
+  bool _imagePicked = true;
 
   @override
   void initState() {
@@ -336,7 +336,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                           ),
                         ),
-                        _imagepicked == false && currentUser!.imageUrl.isEmpty
+                        _imagePicked == false
                             ? const Text(
                                 'you must pick an image',
                                 style: TextStyle(
@@ -462,9 +462,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                               // the form is invalid.
                                               if (_formKey.currentState!
                                                       .validate() &&
-                                                  imageAvailable!.isNotEmpty) {
+                                                  imageAvailable!.isNotEmpty || currentUser!.imageUrl.isNotEmpty) {
                                                 setState(() {
-                                                  _imagepicked = true;
+                                                  _imagePicked = true;
                                                 });
                                                 // Process data.
                                                 _update(
@@ -475,9 +475,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                   currentUserCountry,
                                                 );
                                               } else {
-                                                setState(() {
-                                                  _imagepicked = false;
-                                                });
+                                                if(imageAvailable!.isEmpty){
+                                                  setState(() {
+                                                    _imagePicked = false;
+                                                  });
+                                                }
+
                                               }
                                             },
                                             child: const Text('Update'),
