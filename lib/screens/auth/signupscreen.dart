@@ -222,6 +222,11 @@ class _SignupScreenState extends State<SignupScreen> {
                                 _usernameController.text,
                                 _emailController.text,
                                 _passwordController.text);
+                            setState(() {
+                              _usernameController.clear();
+                              _emailController.clear();
+                              _passwordController.clear();
+                            });
                           }
                         },
                         child: const Text('Signup'),

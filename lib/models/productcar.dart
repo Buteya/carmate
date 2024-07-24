@@ -18,6 +18,10 @@ class ProductCar extends ChangeNotifier {
   List<String>? comments;
   final String description;
   final String carImage;
+  final String yearOfManufacture;
+  final String chasisNumber;
+  final String status;
+  final int quantity;
 
   final List<ProductCar> _productCars = [];
 
@@ -25,6 +29,10 @@ class ProductCar extends ChangeNotifier {
       UnmodifiableListView(_productCars);
 
   ProductCar({
+    required this.status,
+    required this.chasisNumber,
+    required this.quantity,
+    required this.yearOfManufacture,
     required this.carImage,
     required this.userId,
     required this.id,

@@ -5,6 +5,7 @@ import 'package:carmate/screens/auth/passwordresetscreen.dart';
 import 'package:carmate/screens/auth/profilescreen.dart';
 import 'package:carmate/screens/auth/signupscreen.dart';
 import 'package:carmate/screens/products/createproductcarscreen.dart';
+import 'package:carmate/screens/products/viewproductcarsscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -38,6 +39,10 @@ void main() {
         carType: '',
         description: '',
         carImage: '',
+        yearOfManufacture: '',
+        status: '',
+        chasisNumber: '',
+        quantity: 0,
       ),
     ),
   ], child: const MyApp()));
@@ -63,6 +68,7 @@ class MyApp extends StatelessWidget {
         '/profile': (context) => const ProfileScreen(),
         '/passwordreset': (context) => const PasswordResetScreen(),
         '/createproductcar': (context) => const CreateProductCarScreen(),
+        '/viewproductcars' : (context) => const ViewProductCarsScreen(),
       },
     );
   }

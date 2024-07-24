@@ -170,6 +170,10 @@ class _LoginScreenState extends State<LoginScreen> {
                             // Process data.
                             _login(_emailController.text,
                                 _passwordController.text);
+                            setState(() {
+                              _emailController.clear();
+                              _passwordController.clear();
+                            });
                           }
                         },
                         child: const Text('Login'),

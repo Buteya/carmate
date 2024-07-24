@@ -7,6 +7,8 @@ import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../components/badroute.dart';
+import '../../components/customtitle.dart';
+import '../../components/myappdrawer.dart';
 import '../../models/user.dart';
 
 class CreateProductCarScreen extends StatefulWidget {
@@ -30,6 +32,12 @@ class _CreateProductCarScreenState extends State<CreateProductCarScreen> {
   final TextEditingController _carTypeController = TextEditingController();
   final TextEditingController _carDescriptionController =
       TextEditingController();
+  final TextEditingController _yearOfManufactureController =
+      TextEditingController();
+  final TextEditingController _chasisNumberController = TextEditingController();
+  final TextEditingController _quantityController = TextEditingController();
+  final TextEditingController _statusController = TextEditingController();
+  String? imageAvailable;
   String? carImage = '';
   User? currentUser;
   bool _isLoading = false;
@@ -43,6 +51,7 @@ class _CreateProductCarScreenState extends State<CreateProductCarScreen> {
     });
     try {
       currentUser = Provider.of<User>(context, listen: false).users.last;
+      imageAvailable = currentUser?.imageUrl;
       print(currentUser?.username);
     } catch (e) {
       print(e.toString());
@@ -65,14 +74,17 @@ class _CreateProductCarScreenState extends State<CreateProductCarScreen> {
     _carRentPerHrController.dispose();
     _carTypeController.dispose();
     _carDescriptionController.dispose();
+    _yearOfManufactureController.dispose();
+    _chasisNumberController.dispose();
+    _statusController.dispose();
+    _quantityController.dispose();
     super.dispose();
   }
 
   void _addProductCar() {
-    final carProducts =
-        Provider.of<ProductCar>(context, listen: false);
+    final carProducts = Provider.of<ProductCar>(context, listen: false);
     final id = uuid.v4();
-    if(currentUser?.id != null ){
+    if (currentUser?.id != null) {
       carProducts.add(
         ProductCar(
           carImage: carImage!,
@@ -88,19 +100,39 @@ class _CreateProductCarScreenState extends State<CreateProductCarScreen> {
           rentPerHr: int.tryParse(_carRentPerHrController.text)!,
           carType: _carTypeController.text,
           description: _carDescriptionController.text,
+          yearOfManufacture: _yearOfManufactureController.text,
+          status: _statusController.text,
+          quantity: int.tryParse(_quantityController.text)!,
+          chasisNumber: _chasisNumberController.text,
         ),
       );
-    }else{
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.deepPurple,
+          content: Text(
+            'Product $id has been added successfully!!!',
+            style: GoogleFonts.roboto(
+              fontSize: 17,
+              color: Colors.white,
+            ),
+          ),
+        ),
+      );
+      setState(() {
+        carImage = '';
+      });
+    } else {
       print('no current user');
     }
-   for(final product in carProducts.productCars){
-     print(product.id);
-     print(product.userId);
-     print(product.carImage);
-     print(product.description);
-     print(product.price);
-     print(product.rentPerHr);
-   }
+    for (final product in carProducts.productCars) {
+      print(product.id);
+      print(product.userId);
+      print(product.carImage);
+      print(product.description);
+      print(product.price);
+      print(product.rentPerHr);
+      print(product.yearOfManufacture);
+    }
   }
 
   @override
@@ -112,6 +144,19 @@ class _CreateProductCarScreenState extends State<CreateProductCarScreen> {
                 child: CircularProgressIndicator(),
               )
             : Scaffold(
+                appBar: AppBar(
+                  centerTitle: true,
+                  title: const CustomTitle(
+                    color: Colors.deepPurpleAccent,
+                  ),
+                ),
+                drawer: Drawer(
+                  child: MyAppDrawer(
+                    imageAvailable: imageAvailable,
+                    currentUser: currentUser,
+                    mounted: mounted,
+                  ),
+                ),
                 body: SingleChildScrollView(
                   child: Card(
                     child: Column(
@@ -129,17 +174,30 @@ class _CreateProductCarScreenState extends State<CreateProductCarScreen> {
                             ),
                           ),
                         ),
-                        Card(
-                          child: carImage!.isEmpty
-                              ? const Icon(
-                                  Icons.image_rounded,
-                                  size: 60,
-                                )
-                              : ClipRRect(
-                                  borderRadius: const BorderRadius.all(
-                                    Radius.circular(12.0),
-                                  ),
-                                  child: Image.network(carImage!)),
+                        Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Text(
+                            'Create a new car product, with the required details captured. '
+                            'Ensuring all the fields are filled and with the proper appropriate details.',
+                            style: GoogleFonts.roboto(
+                              fontSize: 17,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Card(
+                            child: carImage!.isEmpty
+                                ? const Icon(
+                                    Icons.image_rounded,
+                                    size: 60,
+                                  )
+                                : ClipRRect(
+                                    borderRadius: const BorderRadius.all(
+                                      Radius.circular(12.0),
+                                    ),
+                                    child: Image.network(carImage!)),
+                          ),
                         ),
                         Padding(
                           padding: const EdgeInsets.all(16.0),
@@ -181,181 +239,255 @@ class _CreateProductCarScreenState extends State<CreateProductCarScreen> {
                               )
                             : const SizedBox(),
                         Form(
-                            key: _formKey,
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Card(
-                                child: Container(
-                                  margin: const EdgeInsets.all(30.0),
-                                  child: Column(
-                                    children: [
-                                      FormInput(
-                                        onChangedFunction: (value) =>
-                                            _carManufacturerController.text =
-                                                value!,
-                                        labelText: 'Manufacturer',
-                                        hintText: 'Enter car manufacturer name',
-                                        validationFunction: (value) {
-                                          if (value == null || value.isEmpty) {
-                                            return "please enter car manufacturer name";
-                                          }
-                                          return null;
-                                        },
-                                        obscureText: false,
-                                      ),
-                                      FormInput(
-                                        onChangedFunction: (value) =>
-                                            _carNameController.text = value!,
-                                        labelText: 'Car Name',
-                                        hintText: 'Enter name of the car',
-                                        validationFunction: (value) {
-                                          if (value == null || value.isEmpty) {
-                                            return "please enter name of the car";
-                                          }
-                                          return null;
-                                        },
-                                        obscureText: false,
-                                      ),
-                                      FormInput(
-                                        onChangedFunction: (value) =>
-                                            _engineTypeController.text = value!,
-                                        labelText: 'Engine type',
+                          key: _formKey,
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Card(
+                              child: Container(
+                                margin: const EdgeInsets.all(30.0),
+                                child: Column(
+                                  children: [
+                                    FormInput(
+                                      onChangedFunction: (value) =>
+                                      _statusController.text =
+                                      value!,
+                                      labelText: 'Status',
+                                      hintText:
+                                      'Enter car status, e.g in-stock',
+                                      validationFunction: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return "please enter car status";
+                                        }
+                                        return null;
+                                      },
+                                      obscureText: false,
+                                    ),
+                                    FormInput(
+                                      onChangedFunction: (value) =>
+                                      _chasisNumberController.text =
+                                      value!,
+                                      labelText: 'Chasis Number',
+                                      hintText:
+                                      'Enter car chasis number',
+                                      validationFunction: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return "please enter car chasis number";
+                                        }
+                                        return null;
+                                      },
+                                      obscureText: false,
+                                    ),
+                                    FormInput(
+                                      onChangedFunction: (value) =>
+                                      _quantityController.text =
+                                      value!,
+                                      labelText: 'Quantity',
+                                      hintText:
+                                      'Enter number of cars, e.g 1',
+                                      validationFunction: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return "please enter number of cars";
+                                        }
+                                        return null;
+                                      },
+                                      obscureText: false,
+                                    ),
+                                    FormInput(
+                                      onChangedFunction: (value) =>
+                                          _yearOfManufactureController.text =
+                                              value!,
+                                      labelText: 'Year Of Manufacturer',
+                                      hintText:
+                                          'Enter car year of manufacturer, e.g 2007',
+                                      validationFunction: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return "please enter year of car manufacturer";
+                                        } else if (value.length > 4) {
+                                          return "Year cannot have 5 characters";
+                                        }
+                                        return null;
+                                      },
+                                      obscureText: false,
+                                    ),
+                                    FormInput(
+                                      onChangedFunction: (value) =>
+                                          _carManufacturerController.text =
+                                              value!,
+                                      labelText: 'Manufacturer',
+                                      hintText:
+                                          'Enter car manufacturer name,e.g Toyota',
+                                      validationFunction: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return "please enter car manufacturer name";
+                                        } else if (value.length > 15) {
+                                          return 'Manufacturer`s name is limited to 15 characters';
+                                        }
+                                        return null;
+                                      },
+                                      obscureText: false,
+                                    ),
+                                    FormInput(
+                                      onChangedFunction: (value) =>
+                                          _carNameController.text = value!,
+                                      labelText: 'Car Name',
+                                      hintText:
+                                          'Enter name of the car,e.g Impreza',
+                                      validationFunction: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return "please enter name of the car";
+                                        } else if (value.length > 15) {
+                                          return 'Car name is limited to 15 characters';
+                                        }
+                                        return null;
+                                      },
+                                      obscureText: false,
+                                    ),
+                                    FormInput(
+                                      onChangedFunction: (value) =>
+                                          _engineTypeController.text = value!,
+                                      labelText: 'Engine type',
+                                      hintText:
+                                          'Enter the type of engine, eg.v6',
+                                      validationFunction: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return "please enter the type of engine";
+                                        } else if (value.length > 6) {
+                                          return 'Engine type is limited to 6 characters';
+                                        }
+                                        return null;
+                                      },
+                                      obscureText: false,
+                                    ),
+                                    FormInput(
+                                      onChangedFunction: (value) =>
+                                          _carEngineCCController.text = value!,
+                                      labelText: 'Engine CC',
+                                      hintText:
+                                          'Enter the car engine in cc, e.g 2500cc',
+                                      validationFunction: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return "please enter the car engine cc";
+                                        } else if (value.length > 6) {
+                                          return 'Engine cc characters are limited to 6';
+                                        }
+                                        return null;
+                                      },
+                                      obscureText: false,
+                                    ),
+                                    FormInput(
+                                      onChangedFunction: (value) =>
+                                          _carFuelTypeController.text = value!,
+                                      labelText: 'Fuel Type',
+                                      hintText: 'Enter car fuel type,eg.petrol',
+                                      validationFunction: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return "please enter car fuel type";
+                                        }
+                                        return null;
+                                      },
+                                      obscureText: false,
+                                    ),
+                                    FormInput(
+                                      onChangedFunction: (value) =>
+                                          _carMileageController.text = value!,
+                                      labelText: 'Mileage',
+                                      hintText: 'Enter car mileage,e.g 30000km',
+                                      validationFunction: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return "please enter car mileage";
+                                        }
+                                        return null;
+                                      },
+                                      obscureText: false,
+                                    ),
+                                    FormInput(
+                                      onChangedFunction: (value) =>
+                                          _carPriceController.text = value!,
+                                      labelText: 'Price',
+                                      hintText: 'Enter car price, eg 1000000',
+                                      validationFunction: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return "please enter car price";
+                                        }
+                                        return null;
+                                      },
+                                      obscureText: false,
+                                    ),
+                                    FormInput(
+                                      onChangedFunction: (value) =>
+                                          _carRentPerHrController.text = value!,
+                                      labelText: 'Rent Per Hr',
+                                      hintText: 'Enter car rent per hr,e.g 500',
+                                      validationFunction: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return "please enter car rent per hr";
+                                        }
+                                        return null;
+                                      },
+                                      obscureText: false,
+                                    ),
+                                    FormInput(
+                                      onChangedFunction: (value) =>
+                                          _carTypeController.text = value!,
+                                      labelText: 'Car Type',
+                                      hintText: 'Enter car type, e.g Sedan',
+                                      validationFunction: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return "please enter car type";
+                                        }
+                                        return null;
+                                      },
+                                      obscureText: false,
+                                    ),
+                                    TextFormField(
+                                      maxLines: null,
+                                      onChanged: (value) =>
+                                          _carDescriptionController.text =
+                                              value,
+                                      decoration: const InputDecoration(
+                                        labelText: 'Description',
                                         hintText:
-                                            'Enter the type of engine, eg.v6',
-                                        validationFunction: (value) {
-                                          if (value == null || value.isEmpty) {
-                                            return "please enter the type of engine";
-                                          }
-                                          return null;
-                                        },
-                                        obscureText: false,
+                                            'Enter car description, e.g A good car: Reliable, efficient, safe, comfortable, stylish, and fun. 🚗',
                                       ),
-                                      FormInput(
-                                        onChangedFunction: (value) =>
-                                            _carEngineCCController.text =
-                                                value!,
-                                        labelText: 'Engine CC',
-                                        hintText: 'Enter the car engine in cc',
-                                        validationFunction: (value) {
-                                          if (value == null || value.isEmpty) {
-                                            return "please enter the car engine cc";
-                                          }
-                                          return null;
-                                        },
-                                        obscureText: false,
-                                      ),
-                                      FormInput(
-                                        onChangedFunction: (value) =>
-                                            _carFuelTypeController.text =
-                                                value!,
-                                        labelText: 'Fuel Type',
-                                        hintText:
-                                            'Enter car fuel type,eg.petrol',
-                                        validationFunction: (value) {
-                                          if (value == null || value.isEmpty) {
-                                            return "please enter car fuel type";
-                                          }
-                                          return null;
-                                        },
-                                        obscureText: false,
-                                      ),
-                                      FormInput(
-                                        onChangedFunction: (value) =>
-                                            _carMileageController.text = value!,
-                                        labelText: 'Mileage',
-                                        hintText: 'Enter car mileage',
-                                        validationFunction: (value) {
-                                          if (value == null || value.isEmpty) {
-                                            return "please enter car mileage";
-                                          }
-                                          return null;
-                                        },
-                                        obscureText: false,
-                                      ),
-                                      FormInput(
-                                        onChangedFunction: (value) =>
-                                            _carPriceController.text = value!,
-                                        labelText: 'Price',
-                                        hintText: 'Enter car price',
-                                        validationFunction: (value) {
-                                          if (value == null || value.isEmpty) {
-                                            return "please enter car price";
-                                          }
-                                          return null;
-                                        },
-                                        obscureText: false,
-                                      ),
-                                      FormInput(
-                                        onChangedFunction: (value) =>
-                                            _carRentPerHrController.text =
-                                                value!,
-                                        labelText: 'Rent Per Hr',
-                                        hintText: 'Enter car rent per hr',
-                                        validationFunction: (value) {
-                                          if (value == null || value.isEmpty) {
-                                            return "please enter car rent per hr";
-                                          }
-                                          return null;
-                                        },
-                                        obscureText: false,
-                                      ),
-                                      FormInput(
-                                        onChangedFunction: (value) =>
-                                            _carTypeController.text = value!,
-                                        labelText: 'Car Type',
-                                        hintText: 'Enter car type, e.g Sedan',
-                                        validationFunction: (value) {
-                                          if (value == null || value.isEmpty) {
-                                            return "please enter car type";
-                                          }
-                                          return null;
-                                        },
-                                        obscureText: false,
-                                      ),
-                                      TextFormField(
-                                        maxLines: null,
-                                        onChanged: (value) =>
-                                            _carDescriptionController.text =
-                                                value,
-                                        decoration: const InputDecoration(
-                                          labelText: 'Description',
-                                          hintText: 'Enter car description',
-                                        ),
-                                        validator: (value) {
-                                          if (value == null || value.isEmpty) {
-                                            return "please enter car description";
-                                          }
-                                          return null;
-                                        },
-                                        obscureText: false,
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(16.0),
-                                        child: ElevatedButton(
-                                            onPressed: () {
-                                              // Validate will return true if the form is valid, or false if
-                                              // the form is invalid.
-                                              if (_formKey.currentState!
-                                                      .validate() &&
-                                                  carImage!.isNotEmpty) {
-                                                setState(() {
-                                                  _carImagePicked = true;
-                                                });
-                                                _addProductCar();
-                                              } else {
-                                                setState(() {
-                                                  _carImagePicked = false;
-                                                });
-                                              }
-                                            },
-                                            child: const Text(
-                                                "Create Product Car")),
-                                      ),
-                                    ],
-                                  ),
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return "please enter car description";
+                                        } else if (value.length > 240) {
+                                          return 'Description is limited to 240 characters';
+                                        }
+                                        return null;
+                                      },
+                                      obscureText: false,
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(16.0),
+                                      child: ElevatedButton(
+                                          onPressed: () {
+                                            // Validate will return true if the form is valid, or false if
+                                            // the form is invalid.
+                                            if (_formKey.currentState!
+                                                    .validate() &&
+                                                carImage!.isNotEmpty) {
+                                              setState(() {
+                                                _carImagePicked = true;
+                                              });
+                                              _addProductCar();
+                                              _formKey.currentState?.reset();
+                                            } else {
+                                              setState(() {
+                                                _carImagePicked = false;
+                                              });
+                                            }
+                                          },
+                                          child:
+                                              const Text("Create Product Car")),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            )),
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
