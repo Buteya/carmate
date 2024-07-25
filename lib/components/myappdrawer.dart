@@ -98,6 +98,7 @@ class MyAppDrawer extends StatelessWidget {
           title: const Text('View Product cars'),
           subtitle: const Text(
               'view all the cars in the catalogue and manage them'),
+          trailing: const Icon(Icons.list_alt_rounded),
           onTap: () {
             // Handle item 2 tap
             if (mounted) {

@@ -40,8 +40,7 @@ class User extends ChangeNotifier {
   }
 
   void removeUser(int index) {
-    final user = _users.elementAt(index);
-    _users.remove(user);
+    _users.removeAt(index);
     notifyListeners();
   }
 

@@ -8,9 +8,9 @@ class ProductCar extends ChangeNotifier {
   final String manufacturer;
   final String carName;
   final String engineType;
-  final String engineCC;
+  final int engineCC;
   final String fuelType;
-  final String mileage;
+  final int mileage;
   final int price;
   final int rentPerHr;
   final String carType;
@@ -18,7 +18,7 @@ class ProductCar extends ChangeNotifier {
   List<String>? comments;
   final String description;
   final String carImage;
-  final String yearOfManufacture;
+  final int yearOfManufacture;
   final String chasisNumber;
   final String status;
   final int quantity;
@@ -57,14 +57,13 @@ class ProductCar extends ChangeNotifier {
     notifyListeners();
   }
 
-  void removeUser(int index) {
-    final car = _productCars.elementAt(index);
-    _productCars.remove(car);
+  void removeProduct(int index) {
+    _productCars.removeAt(index);
     notifyListeners();
   }
 
-  void updateUser(ProductCar updatedUser){
-    _productCars.insert(_productCars.length, updatedUser);
+  void updateProduct(ProductCar updatedProduct,int index){
+    _productCars[index]= updatedProduct;
     notifyListeners();
   }
 
