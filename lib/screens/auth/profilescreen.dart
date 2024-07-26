@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
@@ -186,7 +184,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
                 drawer: Drawer(
-                  child: MyAppDrawer(imageAvailable: imageAvailable, currentUser: currentUser, mounted: mounted),
+                  child: MyAppDrawer(
+                      imageAvailable: imageAvailable,
+                      currentUser: currentUser,
+                      mounted: mounted),
                 ),
                 body: SingleChildScrollView(
                   child: Card(
@@ -385,8 +386,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                               // Validate will return true if the form is valid, or false if
                                               // the form is invalid.
                                               if (_formKey.currentState!
-                                                      .validate() &&
-                                                  imageAvailable!.isNotEmpty || currentUser!.imageUrl.isNotEmpty) {
+                                                          .validate() &&
+                                                      imageAvailable!
+                                                          .isNotEmpty ||
+                                                  currentUser!
+                                                      .imageUrl.isNotEmpty) {
                                                 setState(() {
                                                   _imagePicked = true;
                                                 });
@@ -399,12 +403,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                   currentUserCountry,
                                                 );
                                               } else {
-                                                if(imageAvailable!.isEmpty){
+                                                if (imageAvailable!.isEmpty) {
                                                   setState(() {
                                                     _imagePicked = false;
                                                   });
                                                 }
-
                                               }
                                             },
                                             child: const Text('Update'),
@@ -485,5 +488,3 @@ class _ProfileScreenState extends State<ProfileScreen> {
               );
   }
 }
-
-

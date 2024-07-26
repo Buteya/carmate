@@ -1,9 +1,8 @@
 import 'dart:collection';
-import 'dart:convert';
+
 
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:uuid/uuid.dart';
+
 
 class User extends ChangeNotifier {
   final String id;
@@ -45,7 +44,7 @@ class User extends ChangeNotifier {
   }
 
   void updateUser(User updatedUser){
-    _users.insert(_users.length, updatedUser);
+    _users[_users.length-1] = updatedUser;
     notifyListeners();
   }
 

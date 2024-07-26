@@ -802,7 +802,7 @@ class _ViewProductCarsScreenState extends State<ViewProductCarsScreen> {
                                                                                               chasisNumber: chasisNumber,
                                                                                               quantity: int.tryParse(quantity)!,
                                                                                               yearOfManufacture: int.tryParse(yearOfManufacture)!,
-                                                                                              carImage: image!,
+                                                                                              carImage: image!.isEmpty?productCar.productCars[index].carImage:image!,
                                                                                               userId: productCar.productCars[index].userId,
                                                                                               id: productCar.productCars[index].id,
                                                                                               manufacturer: carManufacturer,

@@ -107,6 +107,32 @@ class MyAppDrawer extends StatelessWidget {
             }
           },
         ),
+        ListTile(
+          title: const Text('Create User'),
+          subtitle: const Text(
+              'add a new user to CarMate'),
+          trailing: const Icon(Icons.person_add_alt_rounded),
+          onTap: () {
+            // Handle item 2 tap
+            if (mounted) {
+              Navigator.pushReplacementNamed(
+                  context, '/createuser');
+            }
+          },
+        ),
+        ListTile(
+          title: const Text('View All Users'),
+          subtitle: const Text(
+              'view all the users of CarMate and manage them'),
+          trailing: const Icon(Icons.people_outline_rounded),
+          onTap: () {
+            // Handle item 2 tap
+            if (mounted) {
+              Navigator.pushReplacementNamed(
+                  context, '/viewusers');
+            }
+          },
+        ),
       ],
     );
   }
