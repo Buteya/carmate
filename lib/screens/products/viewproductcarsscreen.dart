@@ -23,7 +23,7 @@ class _ViewProductCarsScreenState extends State<ViewProductCarsScreen> {
   bool _isLoading = false;
   User? currentUser;
   String imageAvailable = '';
-  String? image;
+  String? image = '';
 
   @override
   void initState() {
@@ -33,6 +33,7 @@ class _ViewProductCarsScreenState extends State<ViewProductCarsScreen> {
     try {
       currentUser = Provider.of<User>(context, listen: false).users.last;
       imageAvailable = currentUser!.imageUrl;
+      print(imageAvailable);
       print(currentUser?.username);
     } catch (e) {
       print(e.toString());
@@ -385,458 +386,459 @@ class _ViewProductCarsScreenState extends State<ViewProductCarsScreen> {
                                                       context: context,
                                                       builder: (BuildContext
                                                           context) {
-                                                        return SingleChildScrollView(
-                                                          child: Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .all(8.0),
-                                                            child: Card(
-                                                              child: Column(
-                                                                children: [
-                                                                  Padding(
-                                                                    padding: const EdgeInsets
-                                                                        .symmetric(
-                                                                        vertical:
-                                                                            16.0),
-                                                                    child: Text(
-                                                                      'Update Product Car',
-                                                                      style: GoogleFonts
-                                                                          .lato(
-                                                                        textStyle: Theme.of(context)
-                                                                            .textTheme
-                                                                            .displayLarge,
-                                                                        fontSize:
-                                                                            48,
-                                                                        fontWeight:
-                                                                            FontWeight.w700,
-                                                                        fontStyle:
-                                                                            FontStyle.italic,
+                                                        return StatefulBuilder(
+                                                            builder: (BuildContext context, StateSetter setState) {
+                                                            return SingleChildScrollView(
+                                                              child: Padding(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                        .all(8.0),
+                                                                child: Card(
+                                                                  child: Column(
+                                                                    children: [
+                                                                      Padding(
+                                                                        padding: const EdgeInsets
+                                                                            .symmetric(
+                                                                            vertical:
+                                                                                16.0),
+                                                                        child: Text(
+                                                                          'Update Product Car',
+                                                                          style: GoogleFonts
+                                                                              .lato(
+                                                                            textStyle: Theme.of(context)
+                                                                                .textTheme
+                                                                                .displayLarge,
+                                                                            fontSize:
+                                                                                48,
+                                                                            fontWeight:
+                                                                                FontWeight.w700,
+                                                                            fontStyle:
+                                                                                FontStyle.italic,
+                                                                          ),
+                                                                        ),
                                                                       ),
-                                                                    ),
-                                                                  ),
-                                                                  Padding(
-                                                                    padding:
-                                                                        const EdgeInsets
-                                                                            .all(
-                                                                            16.0),
-                                                                    child: Card(
-                                                                      child: productCar
-                                                                              .productCars[index]
-                                                                              .carImage
-                                                                              .isEmpty
-                                                                          ? const Icon(
-                                                                              Icons.image_rounded,
-                                                                              size: 60,
-                                                                            )
-                                                                          : ClipRRect(
-                                                                              borderRadius: const BorderRadius.all(
-                                                                                Radius.circular(12.0),
-                                                                              ),
-                                                                              child: productCar.productCars[index].carImage.isNotEmpty
-                                                                                  ? Image.network(productCar.productCars[index].carImage)
-                                                                                  : image!.isNotEmpty || productCar.productCars[index].carImage.isNotEmpty
-                                                                                      ? Image.network(image!)
-                                                                                      : Image.network(productCar.productCars[index].carImage),
-                                                                            ),
-                                                                    ),
-                                                                  ),
-                                                                  Padding(
-                                                                    padding:
-                                                                        const EdgeInsets
-                                                                            .all(
-                                                                            16.0),
-                                                                    child:
-                                                                        ElevatedButton
-                                                                            .icon(
-                                                                      onPressed:
-                                                                          () async {
-                                                                        final pickedImage =
-                                                                            await ImagePicker().pickImage(source: ImageSource.gallery);
-                                                                        if (pickedImage !=
-                                                                            null) {
-                                                                          setState(
-                                                                              () {
-                                                                            print(pickedImage.name);
-                                                                            print(pickedImage.path);
-                                                                            image =
-                                                                                pickedImage.path;
-                                                                            print(image);
-                                                                          });
-                                                                          for (final user
-                                                                              in currentUser!.users) {
-                                                                            print('image ${user.imageUrl}');
-                                                                          }
-                                                                        } else {
-                                                                          // Handle the case where the user canceled image selection
-                                                                          // (e.g., show a message or revert to a default image)
-                                                                        }
-                                                                      },
-                                                                      label:
-                                                                          const Row(
-                                                                        mainAxisSize:
-                                                                            MainAxisSize.min,
-                                                                        children: [
-                                                                          Text(
-                                                                              "pick Image"),
-                                                                          Icon(Icons
-                                                                              .camera),
-                                                                        ],
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                  Padding(
-                                                                    padding:
-                                                                        const EdgeInsets
-                                                                            .all(
-                                                                            16.0),
-                                                                    child: Form(
-                                                                      key:
-                                                                          _formKey,
-                                                                      child:
-                                                                          Column(
-                                                                        children: [
-                                                                          FormInput(
-                                                                            initialValue:
-                                                                                status,
-                                                                            onChangedFunction: (value) =>
-                                                                                status = value!,
-                                                                            labelText:
-                                                                                'Status',
-                                                                            hintText:
-                                                                                'Enter car status, e.g in-stock',
-                                                                            validationFunction:
-                                                                                (value) {
-                                                                              if (value == null || value.isEmpty) {
-                                                                                return "please enter car status";
-                                                                              }
-                                                                              return null;
-                                                                            },
-                                                                            obscureText:
-                                                                                false,
-                                                                          ),
-                                                                          FormInput(
-                                                                            initialValue:
-                                                                                chasisNumber,
-                                                                            onChangedFunction: (value) =>
-                                                                                chasisNumber = value!,
-                                                                            labelText:
-                                                                                'Chasis Number',
-                                                                            hintText:
-                                                                                'Enter car chasis number',
-                                                                            validationFunction:
-                                                                                (value) {
-                                                                              if (value == null || value.isEmpty) {
-                                                                                return "please enter car chasis number";
-                                                                              }
-                                                                              return null;
-                                                                            },
-                                                                            obscureText:
-                                                                                false,
-                                                                          ),
-                                                                          FormInput(
-                                                                            initialValue:
-                                                                                quantity,
-                                                                            onChangedFunction: (value) =>
-                                                                                quantity = value!,
-                                                                            labelText:
-                                                                                'Quantity',
-                                                                            hintText:
-                                                                                'Enter number of cars, e.g 1',
-                                                                            validationFunction:
-                                                                                (value) {
-                                                                              if (value == null || value.isEmpty) {
-                                                                                return "please enter number of cars";
-                                                                              }
-                                                                              return null;
-                                                                            },
-                                                                            obscureText:
-                                                                                false,
-                                                                          ),
-                                                                          FormInput(
-                                                                            initialValue:
-                                                                                yearOfManufacture,
-                                                                            onChangedFunction: (value) =>
-                                                                                yearOfManufacture = value!,
-                                                                            labelText:
-                                                                                'Year Of Manufacturer',
-                                                                            hintText:
-                                                                                'Enter car year of manufacturer, e.g 2007',
-                                                                            validationFunction:
-                                                                                (value) {
-                                                                              if (value == null || value.isEmpty) {
-                                                                                return "please enter year of car manufacturer";
-                                                                              } else if (value.length > 4) {
-                                                                                return "Year cannot have 5 characters";
-                                                                              }
-                                                                              return null;
-                                                                            },
-                                                                            obscureText:
-                                                                                false,
-                                                                          ),
-                                                                          FormInput(
-                                                                            initialValue:
-                                                                                carManufacturer,
-                                                                            onChangedFunction: (value) =>
-                                                                                carManufacturer = value!,
-                                                                            labelText:
-                                                                                'Manufacturer',
-                                                                            hintText:
-                                                                                'Enter car manufacturer name,e.g Toyota',
-                                                                            validationFunction:
-                                                                                (value) {
-                                                                              if (value == null || value.isEmpty) {
-                                                                                return "please enter car manufacturer name";
-                                                                              } else if (value.length > 15) {
-                                                                                return 'Manufacturer`s name is limited to 15 characters';
-                                                                              }
-                                                                              return null;
-                                                                            },
-                                                                            obscureText:
-                                                                                false,
-                                                                          ),
-                                                                          FormInput(
-                                                                            initialValue:
-                                                                                carName,
-                                                                            onChangedFunction: (value) =>
-                                                                                carName = value!,
-                                                                            labelText:
-                                                                                'Car Name',
-                                                                            hintText:
-                                                                                'Enter name of the car,e.g Impreza',
-                                                                            validationFunction:
-                                                                                (value) {
-                                                                              if (value == null || value.isEmpty) {
-                                                                                return "please enter name of the car";
-                                                                              } else if (value.length > 15) {
-                                                                                return 'Car name is limited to 15 characters';
-                                                                              }
-                                                                              return null;
-                                                                            },
-                                                                            obscureText:
-                                                                                false,
-                                                                          ),
-                                                                          FormInput(
-                                                                            initialValue:
-                                                                                engineType,
-                                                                            onChangedFunction: (value) =>
-                                                                                engineType = value!,
-                                                                            labelText:
-                                                                                'Engine type',
-                                                                            hintText:
-                                                                                'Enter the type of engine, eg.v6',
-                                                                            validationFunction:
-                                                                                (value) {
-                                                                              if (value == null || value.isEmpty) {
-                                                                                return "please enter the type of engine";
-                                                                              } else if (value.length > 6) {
-                                                                                return 'Engine type is limited to 6 characters';
-                                                                              }
-                                                                              return null;
-                                                                            },
-                                                                            obscureText:
-                                                                                false,
-                                                                          ),
-                                                                          FormInput(
-                                                                            initialValue:
-                                                                                carEngineCC,
-                                                                            onChangedFunction: (value) =>
-                                                                                carEngineCC = value!,
-                                                                            labelText:
-                                                                                'Engine CC',
-                                                                            hintText:
-                                                                                'Enter the car engine in cc, e.g 2500cc',
-                                                                            validationFunction:
-                                                                                (value) {
-                                                                              if (value == null || value.isEmpty) {
-                                                                                return "please enter the car engine cc";
-                                                                              } else if (value.length > 6) {
-                                                                                return 'Engine cc characters are limited to 6';
-                                                                              }
-                                                                              return null;
-                                                                            },
-                                                                            obscureText:
-                                                                                false,
-                                                                          ),
-                                                                          FormInput(
-                                                                            initialValue:
-                                                                                fuelType,
-                                                                            onChangedFunction: (value) =>
-                                                                                fuelType = value!,
-                                                                            labelText:
-                                                                                'Fuel Type',
-                                                                            hintText:
-                                                                                'Enter car fuel type,eg.petrol',
-                                                                            validationFunction:
-                                                                                (value) {
-                                                                              if (value == null || value.isEmpty) {
-                                                                                return "please enter car fuel type";
-                                                                              }
-                                                                              return null;
-                                                                            },
-                                                                            obscureText:
-                                                                                false,
-                                                                          ),
-                                                                          FormInput(
-                                                                            initialValue:
-                                                                                carMileage,
-                                                                            onChangedFunction: (value) =>
-                                                                                carMileage = value!,
-                                                                            labelText:
-                                                                                'Mileage',
-                                                                            hintText:
-                                                                                'Enter car mileage,e.g 30000km',
-                                                                            validationFunction:
-                                                                                (value) {
-                                                                              if (value == null || value.isEmpty) {
-                                                                                return "please enter car mileage";
-                                                                              }
-                                                                              return null;
-                                                                            },
-                                                                            obscureText:
-                                                                                false,
-                                                                          ),
-                                                                          FormInput(
-                                                                            initialValue:
-                                                                                carPrice,
-                                                                            onChangedFunction: (value) =>
-                                                                                carPrice = value!,
-                                                                            labelText:
-                                                                                'Price',
-                                                                            hintText:
-                                                                                'Enter car price, eg 1000000',
-                                                                            validationFunction:
-                                                                                (value) {
-                                                                              if (value == null || value.isEmpty) {
-                                                                                return "please enter car price";
-                                                                              }
-                                                                              return null;
-                                                                            },
-                                                                            obscureText:
-                                                                                false,
-                                                                          ),
-                                                                          FormInput(
-                                                                            initialValue:
-                                                                                rentPerHr,
-                                                                            onChangedFunction: (value) =>
-                                                                                rentPerHr = value!,
-                                                                            labelText:
-                                                                                'Rent Per Hr',
-                                                                            hintText:
-                                                                                'Enter car rent per hr,e.g 500',
-                                                                            validationFunction:
-                                                                                (value) {
-                                                                              if (value == null || value.isEmpty) {
-                                                                                return "please enter car rent per hr";
-                                                                              }
-                                                                              return null;
-                                                                            },
-                                                                            obscureText:
-                                                                                false,
-                                                                          ),
-                                                                          FormInput(
-                                                                            initialValue:
-                                                                                carType,
-                                                                            onChangedFunction: (value) =>
-                                                                                carType = value!,
-                                                                            labelText:
-                                                                                'Car Type',
-                                                                            hintText:
-                                                                                'Enter car type, e.g Sedan',
-                                                                            validationFunction:
-                                                                                (value) {
-                                                                              if (value == null || value.isEmpty) {
-                                                                                return "please enter car type";
-                                                                              }
-                                                                              return null;
-                                                                            },
-                                                                            obscureText:
-                                                                                false,
-                                                                          ),
-                                                                          TextFormField(
-                                                                            initialValue:
-                                                                                description,
-                                                                            maxLines:
-                                                                                null,
-                                                                            onChanged: (value) =>
-                                                                                description = value,
-                                                                            decoration:
-                                                                                const InputDecoration(
-                                                                              labelText: 'Description',
-                                                                              hintText: 'Enter car description, e.g A good car: Reliable, efficient, safe, comfortable, stylish, and fun. 🚗',
-                                                                            ),
-                                                                            validator:
-                                                                                (value) {
-                                                                              if (value == null || value.isEmpty) {
-                                                                                return "please enter car description";
-                                                                              } else if (value.length > 240) {
-                                                                                return 'Description is limited to 240 characters';
-                                                                              }
-                                                                              return null;
-                                                                            },
-                                                                            obscureText:
-                                                                                false,
-                                                                          ),
-                                                                          Padding(
-                                                                            padding:
-                                                                                const EdgeInsets.all(16.0),
-                                                                            child:
-                                                                                Row(
-                                                                              children: [
-                                                                                ElevatedButton.icon(
-                                                                                  onPressed: () {
-                                                                                    Navigator.of(context).pop();
-                                                                                  },
-                                                                                  label: const Row(
-                                                                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                                                                    children: [
-                                                                                      Text('close'),
-                                                                                      Icon(Icons.close_rounded),
-                                                                                    ],
-                                                                                  ),
-                                                                                ),
-                                                                                ElevatedButton.icon(
-                                                                                  onPressed: () {
-                                                                                    productCar.updateProduct(
-                                                                                        ProductCar(
-                                                                                          status: status,
-                                                                                          chasisNumber: chasisNumber,
-                                                                                          quantity: int.tryParse(quantity)!,
-                                                                                          yearOfManufacture: int.tryParse(yearOfManufacture)!,
-                                                                                          carImage: image!,
-                                                                                          userId: productCar.productCars[index].userId,
-                                                                                          id: productCar.productCars[index].id,
-                                                                                          manufacturer: carManufacturer,
-                                                                                          carName: carName,
-                                                                                          engineType: engineType,
-                                                                                          engineCC: int.tryParse(carEngineCC)!,
-                                                                                          fuelType: fuelType,
-                                                                                          mileage: int.tryParse(carMileage)!,
-                                                                                          price: int.tryParse(carPrice)!,
-                                                                                          rentPerHr: int.tryParse(rentPerHr)!,
-                                                                                          carType: carType,
-                                                                                          description: description,
-                                                                                        ),
-                                                                                        index);
-                                                                                    Navigator.of(context).pop();
-                                                                                  },
-                                                                                  label: const Row(
-                                                                                    children: [
-                                                                                      Text('update'),
-                                                                                      Icon(Icons.update_rounded),
-                                                                                    ],
-                                                                                  ),
+                                                                      Padding(
+                                                                        padding:
+                                                                            const EdgeInsets
+                                                                                .all(
+                                                                                16.0),
+                                                                        child: Card(
+                                                                          child: productCar
+                                                                                  .productCars[index]
+                                                                                  .carImage
+                                                                                  .isEmpty
+                                                                              ? const Icon(
+                                                                                  Icons.image_rounded,
+                                                                                  size: 60,
                                                                                 )
-                                                                              ],
-                                                                            ),
-                                                                          )
-                                                                        ],
+                                                                              : ClipRRect(
+                                                                                  borderRadius: const BorderRadius.all(
+                                                                                    Radius.circular(12.0),
+                                                                                  ),
+                                                                                  child: image!.isEmpty ? Image.network(productCar.productCars[index].carImage) : Image.network(image!),
+                                                                                ),
+                                                                        ),
                                                                       ),
-                                                                    ),
+                                                                      Padding(
+                                                                        padding:
+                                                                            const EdgeInsets
+                                                                                .all(
+                                                                                16.0),
+                                                                        child:
+                                                                            ElevatedButton
+                                                                                .icon(
+                                                                          onPressed:
+                                                                              () async {
+                                                                            final pickedImage =
+                                                                                await ImagePicker().pickImage(source: ImageSource.gallery);
+                                                                            if (pickedImage !=
+                                                                                null) {
+                                                                              setState(
+                                                                                  () {
+                                                                                print(pickedImage.name);
+                                                                                print(pickedImage.path);
+                                                                                image =
+                                                                                    pickedImage.path;
+                                                                                print(image);
+                                                                                print(productCar.productCars[index].carImage);
+                                                                              });
+                                                                              for (final user
+                                                                                  in currentUser!.users) {
+                                                                                print('image ${user.imageUrl}');
+                                                                              }
+                                                                            } else {
+                                                                              // Handle the case where the user canceled image selection
+                                                                              // (e.g., show a message or revert to a default image)
+                                                                            }
+                                                                          },
+                                                                          label:
+                                                                              const Row(
+                                                                            mainAxisSize:
+                                                                                MainAxisSize.min,
+                                                                            children: [
+                                                                              Text(
+                                                                                  "pick Image"),
+                                                                              Icon(Icons
+                                                                                  .camera),
+                                                                            ],
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                      Padding(
+                                                                        padding:
+                                                                            const EdgeInsets
+                                                                                .all(
+                                                                                16.0),
+                                                                        child: Form(
+                                                                          key:
+                                                                              _formKey,
+                                                                          child:
+                                                                              Column(
+                                                                            children: [
+                                                                              FormInput(
+                                                                                initialValue:
+                                                                                    status,
+                                                                                onChangedFunction: (value) =>
+                                                                                    status = value!,
+                                                                                labelText:
+                                                                                    'Status',
+                                                                                hintText:
+                                                                                    'Enter car status, e.g in-stock',
+                                                                                validationFunction:
+                                                                                    (value) {
+                                                                                  if (value == null || value.isEmpty) {
+                                                                                    return "please enter car status";
+                                                                                  }
+                                                                                  return null;
+                                                                                },
+                                                                                obscureText:
+                                                                                    false,
+                                                                              ),
+                                                                              FormInput(
+                                                                                initialValue:
+                                                                                    chasisNumber,
+                                                                                onChangedFunction: (value) =>
+                                                                                    chasisNumber = value!,
+                                                                                labelText:
+                                                                                    'Chasis Number',
+                                                                                hintText:
+                                                                                    'Enter car chasis number',
+                                                                                validationFunction:
+                                                                                    (value) {
+                                                                                  if (value == null || value.isEmpty) {
+                                                                                    return "please enter car chasis number";
+                                                                                  }
+                                                                                  return null;
+                                                                                },
+                                                                                obscureText:
+                                                                                    false,
+                                                                              ),
+                                                                              FormInput(
+                                                                                initialValue:
+                                                                                    quantity,
+                                                                                onChangedFunction: (value) =>
+                                                                                    quantity = value!,
+                                                                                labelText:
+                                                                                    'Quantity',
+                                                                                hintText:
+                                                                                    'Enter number of cars, e.g 1',
+                                                                                validationFunction:
+                                                                                    (value) {
+                                                                                  if (value == null || value.isEmpty) {
+                                                                                    return "please enter number of cars";
+                                                                                  }
+                                                                                  return null;
+                                                                                },
+                                                                                obscureText:
+                                                                                    false,
+                                                                              ),
+                                                                              FormInput(
+                                                                                initialValue:
+                                                                                    yearOfManufacture,
+                                                                                onChangedFunction: (value) =>
+                                                                                    yearOfManufacture = value!,
+                                                                                labelText:
+                                                                                    'Year Of Manufacturer',
+                                                                                hintText:
+                                                                                    'Enter car year of manufacturer, e.g 2007',
+                                                                                validationFunction:
+                                                                                    (value) {
+                                                                                  if (value == null || value.isEmpty) {
+                                                                                    return "please enter year of car manufacturer";
+                                                                                  } else if (value.length > 4) {
+                                                                                    return "Year cannot have 5 characters";
+                                                                                  }
+                                                                                  return null;
+                                                                                },
+                                                                                obscureText:
+                                                                                    false,
+                                                                              ),
+                                                                              FormInput(
+                                                                                initialValue:
+                                                                                    carManufacturer,
+                                                                                onChangedFunction: (value) =>
+                                                                                    carManufacturer = value!,
+                                                                                labelText:
+                                                                                    'Manufacturer',
+                                                                                hintText:
+                                                                                    'Enter car manufacturer name,e.g Toyota',
+                                                                                validationFunction:
+                                                                                    (value) {
+                                                                                  if (value == null || value.isEmpty) {
+                                                                                    return "please enter car manufacturer name";
+                                                                                  } else if (value.length > 15) {
+                                                                                    return 'Manufacturer`s name is limited to 15 characters';
+                                                                                  }
+                                                                                  return null;
+                                                                                },
+                                                                                obscureText:
+                                                                                    false,
+                                                                              ),
+                                                                              FormInput(
+                                                                                initialValue:
+                                                                                    carName,
+                                                                                onChangedFunction: (value) =>
+                                                                                    carName = value!,
+                                                                                labelText:
+                                                                                    'Car Name',
+                                                                                hintText:
+                                                                                    'Enter name of the car,e.g Impreza',
+                                                                                validationFunction:
+                                                                                    (value) {
+                                                                                  if (value == null || value.isEmpty) {
+                                                                                    return "please enter name of the car";
+                                                                                  } else if (value.length > 15) {
+                                                                                    return 'Car name is limited to 15 characters';
+                                                                                  }
+                                                                                  return null;
+                                                                                },
+                                                                                obscureText:
+                                                                                    false,
+                                                                              ),
+                                                                              FormInput(
+                                                                                initialValue:
+                                                                                    engineType,
+                                                                                onChangedFunction: (value) =>
+                                                                                    engineType = value!,
+                                                                                labelText:
+                                                                                    'Engine type',
+                                                                                hintText:
+                                                                                    'Enter the type of engine, eg.v6',
+                                                                                validationFunction:
+                                                                                    (value) {
+                                                                                  if (value == null || value.isEmpty) {
+                                                                                    return "please enter the type of engine";
+                                                                                  } else if (value.length > 6) {
+                                                                                    return 'Engine type is limited to 6 characters';
+                                                                                  }
+                                                                                  return null;
+                                                                                },
+                                                                                obscureText:
+                                                                                    false,
+                                                                              ),
+                                                                              FormInput(
+                                                                                initialValue:
+                                                                                    carEngineCC,
+                                                                                onChangedFunction: (value) =>
+                                                                                    carEngineCC = value!,
+                                                                                labelText:
+                                                                                    'Engine CC',
+                                                                                hintText:
+                                                                                    'Enter the car engine in cc, e.g 2500cc',
+                                                                                validationFunction:
+                                                                                    (value) {
+                                                                                  if (value == null || value.isEmpty) {
+                                                                                    return "please enter the car engine cc";
+                                                                                  } else if (value.length > 6) {
+                                                                                    return 'Engine cc characters are limited to 6';
+                                                                                  }
+                                                                                  return null;
+                                                                                },
+                                                                                obscureText:
+                                                                                    false,
+                                                                              ),
+                                                                              FormInput(
+                                                                                initialValue:
+                                                                                    fuelType,
+                                                                                onChangedFunction: (value) =>
+                                                                                    fuelType = value!,
+                                                                                labelText:
+                                                                                    'Fuel Type',
+                                                                                hintText:
+                                                                                    'Enter car fuel type,eg.petrol',
+                                                                                validationFunction:
+                                                                                    (value) {
+                                                                                  if (value == null || value.isEmpty) {
+                                                                                    return "please enter car fuel type";
+                                                                                  }
+                                                                                  return null;
+                                                                                },
+                                                                                obscureText:
+                                                                                    false,
+                                                                              ),
+                                                                              FormInput(
+                                                                                initialValue:
+                                                                                    carMileage,
+                                                                                onChangedFunction: (value) =>
+                                                                                    carMileage = value!,
+                                                                                labelText:
+                                                                                    'Mileage',
+                                                                                hintText:
+                                                                                    'Enter car mileage,e.g 30000km',
+                                                                                validationFunction:
+                                                                                    (value) {
+                                                                                  if (value == null || value.isEmpty) {
+                                                                                    return "please enter car mileage";
+                                                                                  }
+                                                                                  return null;
+                                                                                },
+                                                                                obscureText:
+                                                                                    false,
+                                                                              ),
+                                                                              FormInput(
+                                                                                initialValue:
+                                                                                    carPrice,
+                                                                                onChangedFunction: (value) =>
+                                                                                    carPrice = value!,
+                                                                                labelText:
+                                                                                    'Price',
+                                                                                hintText:
+                                                                                    'Enter car price, eg 1000000',
+                                                                                validationFunction:
+                                                                                    (value) {
+                                                                                  if (value == null || value.isEmpty) {
+                                                                                    return "please enter car price";
+                                                                                  }
+                                                                                  return null;
+                                                                                },
+                                                                                obscureText:
+                                                                                    false,
+                                                                              ),
+                                                                              FormInput(
+                                                                                initialValue:
+                                                                                    rentPerHr,
+                                                                                onChangedFunction: (value) =>
+                                                                                    rentPerHr = value!,
+                                                                                labelText:
+                                                                                    'Rent Per Hr',
+                                                                                hintText:
+                                                                                    'Enter car rent per hr,e.g 500',
+                                                                                validationFunction:
+                                                                                    (value) {
+                                                                                  if (value == null || value.isEmpty) {
+                                                                                    return "please enter car rent per hr";
+                                                                                  }
+                                                                                  return null;
+                                                                                },
+                                                                                obscureText:
+                                                                                    false,
+                                                                              ),
+                                                                              FormInput(
+                                                                                initialValue:
+                                                                                    carType,
+                                                                                onChangedFunction: (value) =>
+                                                                                    carType = value!,
+                                                                                labelText:
+                                                                                    'Car Type',
+                                                                                hintText:
+                                                                                    'Enter car type, e.g Sedan',
+                                                                                validationFunction:
+                                                                                    (value) {
+                                                                                  if (value == null || value.isEmpty) {
+                                                                                    return "please enter car type";
+                                                                                  }
+                                                                                  return null;
+                                                                                },
+                                                                                obscureText:
+                                                                                    false,
+                                                                              ),
+                                                                              TextFormField(
+                                                                                initialValue:
+                                                                                    description,
+                                                                                maxLines:
+                                                                                    null,
+                                                                                onChanged: (value) =>
+                                                                                    description = value,
+                                                                                decoration:
+                                                                                    const InputDecoration(
+                                                                                  labelText: 'Description',
+                                                                                  hintText: 'Enter car description, e.g A good car: Reliable, efficient, safe, comfortable, stylish, and fun. 🚗',
+                                                                                ),
+                                                                                validator:
+                                                                                    (value) {
+                                                                                  if (value == null || value.isEmpty) {
+                                                                                    return "please enter car description";
+                                                                                  } else if (value.length > 240) {
+                                                                                    return 'Description is limited to 240 characters';
+                                                                                  }
+                                                                                  return null;
+                                                                                },
+                                                                                obscureText:
+                                                                                    false,
+                                                                              ),
+                                                                              Padding(
+                                                                                padding:
+                                                                                    const EdgeInsets.all(16.0),
+                                                                                child:
+                                                                                    Row(
+                                                                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                                                  children: [
+                                                                                    ElevatedButton.icon(
+                                                                                      onPressed: () {
+                                                                                        Navigator.of(context).pop();
+                                                                                      },
+                                                                                      label: const Row(
+                                                                                        children: [
+                                                                                          Text('close'),
+                                                                                          Icon(Icons.close_rounded),
+                                                                                        ],
+                                                                                      ),
+                                                                                    ),
+                                                                                    ElevatedButton.icon(
+                                                                                      onPressed: () {
+                                                                                        productCar.updateProduct(
+                                                                                            ProductCar(
+                                                                                              status: status,
+                                                                                              chasisNumber: chasisNumber,
+                                                                                              quantity: int.tryParse(quantity)!,
+                                                                                              yearOfManufacture: int.tryParse(yearOfManufacture)!,
+                                                                                              carImage: image!,
+                                                                                              userId: productCar.productCars[index].userId,
+                                                                                              id: productCar.productCars[index].id,
+                                                                                              manufacturer: carManufacturer,
+                                                                                              carName: carName,
+                                                                                              engineType: engineType,
+                                                                                              engineCC: int.tryParse(carEngineCC)!,
+                                                                                              fuelType: fuelType,
+                                                                                              mileage: int.tryParse(carMileage)!,
+                                                                                              price: int.tryParse(carPrice)!,
+                                                                                              rentPerHr: int.tryParse(rentPerHr)!,
+                                                                                              carType: carType,
+                                                                                              description: description,
+                                                                                            ),
+                                                                                            index);
+                                                                                        Navigator.of(context).pop();
+                                                                                      },
+                                                                                      label: const Row(
+                                                                                        children: [
+                                                                                          Text('update'),
+                                                                                          Icon(Icons.update_rounded),
+                                                                                        ],
+                                                                                      ),
+                                                                                    )
+                                                                                  ],
+                                                                                ),
+                                                                              )
+                                                                            ],
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    ],
                                                                   ),
-                                                                ],
+                                                                ),
                                                               ),
-                                                            ),
-                                                          ),
+                                                            );
+                                                          }
                                                         ); // Your custom overlay widget
                                                       },
                                                     );

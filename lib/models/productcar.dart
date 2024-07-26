@@ -17,7 +17,7 @@ class ProductCar extends ChangeNotifier {
   int? rating;
   List<String>? comments;
   final String description;
-  final String carImage;
+  late final String carImage;
   final int yearOfManufacture;
   final String chasisNumber;
   final String status;
