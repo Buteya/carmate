@@ -283,7 +283,7 @@ class _ViewUsersScreenState extends State<ViewUsersScreen> {
                                                                             .users[index]
                                                                             .imageUrl
                                                                             .isEmpty
-                                                                        ? const Icon(
+                                                                        ? image!.isNotEmpty?Image.network(image!):const Icon(
                                                                             Icons.image_rounded,
                                                                             size:
                                                                                 60,
@@ -294,7 +294,7 @@ class _ViewUsersScreenState extends State<ViewUsersScreen> {
                                                                               Radius.circular(12.0),
                                                                             ),
                                                                             child: image!.isEmpty
-                                                                                ? Image.network(user.users[index].imageUrl)
+                                                                                ? Image.network(user.users[index].imageUrl )
                                                                                 : Image.network(image!),
                                                                           ),
                                                                   ),

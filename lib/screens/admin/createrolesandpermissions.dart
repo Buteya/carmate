@@ -1,6 +1,3 @@
-import 'dart:convert';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -222,8 +219,14 @@ class _CreateRolesAndPermissionsState extends State<CreateRolesAndPermissions> {
                                           onChanged: (newValue) {
                                             setState(() {
                                               selectedPermission = newValue!;
-                                              selectPermissionsRole.add(newValue);
-                                              print(selectPermissionsRole.length);
+                                              selectPermissionsRole
+                                                  .add(selectedPermission);
+                                              for (final item
+                                                  in selectPermissionsRole) {
+                                                print(item);
+                                              }
+                                              print(
+                                                  selectPermissionsRole.length);
                                             });
                                           },
                                           items: newListPermisssions
@@ -238,7 +241,19 @@ class _CreateRolesAndPermissionsState extends State<CreateRolesAndPermissions> {
                                     ),
                                   ],
                                 ),
-                                ...selectPermissionsRole.map((item)=>Text(item)),
+                                SizedBox(
+                                  height: 100,
+                                  child: ListView.builder(
+                                      itemCount: selectPermissionsRole.length,
+                                      itemBuilder: (context, index) {
+                                        print(selectPermissionsRole[index].toString());
+                                        return ListTile(title: Text('role ${selectPermissionsRole[index].toString()}'),);
+                                      }),
+                                ),
+                                ...selectPermissionsRole
+                                    .map((item) => Text(item)),
+                                for (final item in selectPermissionsRole)
+                                  {Text(item)} as Widget,
                                 Padding(
                                   padding: const EdgeInsets.all(16.0),
                                   child: ElevatedButton.icon(
