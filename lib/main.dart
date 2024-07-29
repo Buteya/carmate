@@ -3,6 +3,7 @@ import 'package:carmate/models/roleandpermissions/permission.dart';
 import 'package:carmate/models/roleandpermissions/role.dart';
 import 'package:carmate/models/user.dart';
 import 'package:carmate/screens/admin/createproductcarscreen.dart';
+import 'package:carmate/screens/admin/createrolesandpermissions.dart';
 import 'package:carmate/screens/admin/createuserscreen.dart';
 import 'package:carmate/screens/admin/viewproductcarsscreen.dart';
 import 'package:carmate/screens/admin/viewusersscreen.dart';
@@ -88,6 +89,7 @@ class MyApp extends StatelessWidget {
         '/viewproductcars': (context) => const ViewProductCarsScreen(),
         '/viewusers': (context) => const ViewUsersScreen(),
         '/createuser': (context)=> const CreateUserScreen(),
+        '/addrolespermissions':(context)=> const CreateRolesAndPermissions(),
       },
     );
   }

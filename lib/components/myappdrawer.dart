@@ -133,6 +133,19 @@ class MyAppDrawer extends StatelessWidget {
             }
           },
         ),
+        ListTile(
+          title: const Text('Create Role and Permissions'),
+          subtitle: const Text(
+              'create user roles and permissions'),
+          trailing: const Icon(Icons.settings_accessibility_rounded),
+          onTap: () {
+            // Handle item 2 tap
+            if (mounted) {
+              Navigator.pushReplacementNamed(
+                  context, '/addrolespermissions');
+            }
+          },
+        ),
       ],
     );
   }
