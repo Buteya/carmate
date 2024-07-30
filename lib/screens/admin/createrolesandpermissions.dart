@@ -27,10 +27,9 @@ class _CreateRolesAndPermissionsState extends State<CreateRolesAndPermissions> {
   User? currentUser;
   bool _isLoading = false;
   String? imageAvailable = '';
-  String selectedPermission = 'create user';
-  List<String> listPermissions = [];
-  List<String> newListPermisssions = ['create user'];
-  List<String> selectPermissionsRole = [];
+  String? selectedPermission;
+  Set<String> newListPermissions = {}; // add Permission tab
+  List<String> newList = [];
   final uuid = const Uuid();
 
   @override
@@ -63,8 +62,8 @@ class _CreateRolesAndPermissionsState extends State<CreateRolesAndPermissions> {
           permission: _permissionController.text,
         ),
       );
-      newListPermisssions.add(_permissionController.text);
-      print(newListPermisssions);
+      newListPermissions.add(_permissionController.text);
+      print(newListPermissions);
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -137,7 +136,7 @@ class _CreateRolesAndPermissionsState extends State<CreateRolesAndPermissions> {
                     title: const CustomTitle(
                       color: Colors.deepPurpleAccent,
                     ),
-                    bottom: TabBar(
+                    bottom: const TabBar(
                       tabs: [
                         Tab(text: 'Tab 1'),
                         Tab(
@@ -162,117 +161,160 @@ class _CreateRolesAndPermissionsState extends State<CreateRolesAndPermissions> {
                       // Content for Tab 1
                       Center(child: Text('Tab 1 Content')),
                       // Content for Tab 2
-                      Card(
-                        child: Form(
-                          key: _formRolesKey,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 16.0),
-                                  child: Text(
-                                    'Add New Role',
-                                    style: GoogleFonts.lato(
-                                      textStyle: Theme.of(context)
-                                          .textTheme
-                                          .displayLarge,
-                                      fontSize: 48,
-                                      fontWeight: FontWeight.w700,
-                                      fontStyle: FontStyle.italic,
+                      SingleChildScrollView(
+                        child: Card(
+                          child: Form(
+                            key: _formRolesKey,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 16.0),
+                                    child: Text(
+                                      'Add New Role',
+                                      style: GoogleFonts.lato(
+                                        textStyle: Theme.of(context)
+                                            .textTheme
+                                            .displayLarge,
+                                        fontSize: 48,
+                                        fontWeight: FontWeight.w700,
+                                        fontStyle: FontStyle.italic,
+                                      ),
                                     ),
                                   ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(16.0),
-                                  child: Text(
-                                    'Create a new role, with the required details captured. '
-                                    'Ensuring all the fields are filled and with the proper appropriate details.',
-                                    style: GoogleFonts.roboto(
-                                      fontSize: 17,
+                                  Padding(
+                                    padding: const EdgeInsets.all(16.0),
+                                    child: Text(
+                                      'Create a new role, with the required details captured. '
+                                      'Ensuring all the fields are filled and with the proper appropriate details.',
+                                      style: GoogleFonts.roboto(
+                                        fontSize: 17,
+                                      ),
                                     ),
                                   ),
-                                ),
-                                FormInput(
-                                  onChangedFunction: (value) =>
-                                      _roleController.text = value!,
-                                  labelText: 'Role Name',
-                                  hintText: 'Enter a role,e.g Manager',
-                                  validationFunction: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return "please enter a role";
-                                    }
-                                    return null;
-                                  },
-                                  obscureText: false,
-                                ),
-                                Text('pick all the permissions of the roles'),
-                                Row(
-                                  children: [
-                                    Text('Roles'),
-                                    StatefulBuilder(
-                                      builder: (BuildContext context,
-                                          StateSetter setState) {
-                                        return DropdownButton<String>(
-                                          value: selectedPermission,
-                                          onChanged: (newValue) {
-                                            setState(() {
-                                              selectedPermission = newValue!;
-                                              selectPermissionsRole
-                                                  .add(selectedPermission);
-                                              for (final item
-                                                  in selectPermissionsRole) {
-                                                print(item);
-                                              }
-                                              print(
-                                                  selectPermissionsRole.length);
-                                            });
-                                          },
-                                          items: newListPermisssions
-                                              .map((String value) {
-                                            return DropdownMenuItem<String>(
-                                              value: value,
-                                              child: Text(value),
-                                            );
-                                          }).toList(),
-                                        );
+                                  Padding(
+                                    padding: const EdgeInsets.all(16.0),
+                                    child: FormInput(
+                                      onChangedFunction: (value) =>
+                                          _roleController.text = value!,
+                                      labelText: 'Role Name',
+                                      hintText: 'Enter a role,e.g Manager',
+                                      validationFunction: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return "please enter a role";
+                                        }
+                                        return null;
                                       },
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(
-                                  height: 100,
-                                  child: ListView.builder(
-                                      itemCount: selectPermissionsRole.length,
-                                      itemBuilder: (context, index) {
-                                        print(selectPermissionsRole[index].toString());
-                                        return ListTile(title: Text('role ${selectPermissionsRole[index].toString()}'),);
-                                      }),
-                                ),
-                                ...selectPermissionsRole
-                                    .map((item) => Text(item)),
-                                for (final item in selectPermissionsRole)
-                                  {Text(item)} as Widget,
-                                Padding(
-                                  padding: const EdgeInsets.all(16.0),
-                                  child: ElevatedButton.icon(
-                                    onPressed: () {
-                                      if (_formPermissionsKey.currentState!
-                                          .validate()) {
-                                        _addRole();
-                                      }
-                                    },
-                                    label: const Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Text('add role'),
-                                        Icon(Icons.add),
-                                      ],
+                                      obscureText: false,
                                     ),
                                   ),
-                                ),
-                              ],
+                                  StatefulBuilder(
+                                    builder: (BuildContext context,
+                                        StateSetter setState) {
+                                      return Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.all(16.0),
+                                            child: Text(
+                                              'Pick the permissions to assign to '
+                                              'the new role from the dropdown:',
+                                              style: GoogleFonts.roboto(
+                                                fontSize: 17,
+                                              ),
+                                              softWrap: true,
+                                            ),
+                                          ),
+                                          Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Card(
+                                                child: Padding(
+                                                  padding: const EdgeInsets.all(16.0),
+                                                  child: DropdownButton<String>(
+                                                    value: selectedPermission,
+                                                    onChanged: (newValue) {
+                                                      setState(() {
+                                                        selectedPermission =
+                                                            newValue!;
+                                                        newList.add(
+                                                            selectedPermission!);
+                                                        for (final item
+                                                            in newList) {
+                                                          print(item);
+                                                        }
+                                                        print(newList.length);
+                                                      });
+                                                    },
+                                                    items: newListPermissions
+                                                        .map((String value) {
+                                                      return DropdownMenuItem<
+                                                          String>(
+                                                        value: value,
+                                                        child: Text(value),
+                                                      );
+                                                    }).toList(),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(16.0),
+                                            child: Text(
+                                              'The following permissions will be assigned to the new role: '
+                                                  ,
+                                              style: GoogleFonts.roboto(
+                                                fontSize: 17,
+                                              ),
+                                              softWrap: true,
+                                            ),
+                                          ),
+                                          Card(
+                                            child: SizedBox(
+                                              height: 200,
+                                              width: 300,
+                                              child: ListView.builder(
+                                                itemCount: newList.length,
+                                                itemBuilder: (context, index) {
+                                                  print(index);
+                                                  final permission =
+                                                      newList[index];
+                                                  print(permission.length);
+                                                  return ListTile(
+                                                    title: Text(permission),
+                                                    // Other list item properties (e.g., subtitle, trailing, etc.)
+                                                  );
+                                                },
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(16.0),
+                                    child: ElevatedButton.icon(
+                                      onPressed: () {
+                                        if (_formPermissionsKey.currentState!
+                                            .validate()) {
+                                          _addRole();
+                                        }
+                                      },
+                                      label: const Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Text('add role'),
+                                          Icon(Icons.add),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
@@ -310,19 +352,22 @@ class _CreateRolesAndPermissionsState extends State<CreateRolesAndPermissions> {
                                     ),
                                   ),
                                 ),
-                                FormInput(
-                                  onChangedFunction: (value) =>
-                                      _permissionController.text = value!,
-                                  labelText: 'Permission',
-                                  hintText:
-                                      'Enter a permission,e.g create user',
-                                  validationFunction: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return "please enter a permission";
-                                    }
-                                    return null;
-                                  },
-                                  obscureText: false,
+                                Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: FormInput(
+                                    onChangedFunction: (value) =>
+                                        _permissionController.text = value!,
+                                    labelText: 'Permission',
+                                    hintText:
+                                        'Enter a permission,e.g create user',
+                                    validationFunction: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return "please enter a permission";
+                                      }
+                                      return null;
+                                    },
+                                    obscureText: false,
+                                  ),
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.all(16.0),
@@ -331,6 +376,7 @@ class _CreateRolesAndPermissionsState extends State<CreateRolesAndPermissions> {
                                       if (_formPermissionsKey.currentState!
                                           .validate()) {
                                         _addPermission();
+                                        _formPermissionsKey.currentState?.reset();
                                       }
                                     },
                                     label: const Row(
