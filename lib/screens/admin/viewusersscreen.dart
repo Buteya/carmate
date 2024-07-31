@@ -83,7 +83,8 @@ class _ViewUsersScreenState extends State<ViewUsersScreen> {
                                   var username = user.users[index].username;
                                   var firstname = user.users[index].firstname;
                                   var lastname = user.users[index].lastname;
-                                  var mobileNumber = user.users[index].mobilenumber;
+                                  var mobileNumber =
+                                      user.users[index].mobileNumber;
                                   var country = user.users[index].country;
 
                                   return Dismissible(
@@ -144,23 +145,57 @@ class _ViewUsersScreenState extends State<ViewUsersScreen> {
                                     },
                                     direction: DismissDirection.endToStart,
                                     child: ExpansionTile(
-                                      leading: Image.network(
-                                        user.users[index].imageUrl,
-                                        width: 50,
-                                      ),
+                                      leading: user
+                                              .users[index].imageUrl.isEmpty
+                                          ? const SizedBox(
+                                              width: 50,
+                                              child: Card(
+                                                  child: Icon(Icons.person)))
+                                          : SizedBox(
+                                              width: 50,
+                                              child: Card(
+                                                child: Image.network(
+                                                  user.users[index].imageUrl,
+                                                  width: 50,
+                                                ),
+                                              ),
+                                            ),
                                       title: Text(
                                         user.users[index].firstname,
                                       ),
                                       subtitle: Text(
                                         user.users[index].lastname,
                                       ),
-                                      trailing: const Text('status'),
+                                      trailing: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.all(3.0),
+                                            child: CircleAvatar(
+                                              maxRadius: 3,
+                                              backgroundColor:
+                                                  user.users[index].status ==
+                                                          'offline'
+                                                      ? Colors.red
+                                                      : Colors.green,
+                                            ),
+                                          ),
+                                          Text(user.users[index].status!),
+                                        ],
+                                      ),
                                       children: [
                                         ListTile(
-                                          title: Card(
-                                            child: Image.network(
-                                                user.users[index].imageUrl),
-                                          ),
+                                          title: user
+                                                  .users[index].imageUrl.isEmpty
+                                              ? const SizedBox(
+                                                  height: 100,
+                                                  child: Card(
+                                                      child:
+                                                          Icon(Icons.person)))
+                                              : Card(
+                                                  child: Image.network(user
+                                                      .users[index].imageUrl),
+                                                ),
                                         ),
                                         ListTile(
                                           title: const Text(
@@ -215,7 +250,7 @@ class _ViewUsersScreenState extends State<ViewUsersScreen> {
                                             'MobileNumber',
                                           ),
                                           subtitle: Text(
-                                            user.users[index].mobilenumber,
+                                            user.users[index].mobileNumber,
                                           ),
                                         ),
                                         ListTile(
@@ -254,7 +289,7 @@ class _ViewUsersScreenState extends State<ViewUsersScreen> {
                                                                       vertical:
                                                                           16.0),
                                                                   child: Text(
-                                                                    'Update Product Car',
+                                                                    'Update User',
                                                                     style:
                                                                         GoogleFonts
                                                                             .lato(
@@ -283,18 +318,19 @@ class _ViewUsersScreenState extends State<ViewUsersScreen> {
                                                                             .users[index]
                                                                             .imageUrl
                                                                             .isEmpty
-                                                                        ? image!.isNotEmpty?Image.network(image!):const Icon(
-                                                                            Icons.image_rounded,
-                                                                            size:
-                                                                                60,
-                                                                          )
+                                                                        ? image!.isNotEmpty
+                                                                            ? Image.network(image!)
+                                                                            : const Icon(
+                                                                                Icons.image_rounded,
+                                                                                size: 60,
+                                                                              )
                                                                         : ClipRRect(
                                                                             borderRadius:
                                                                                 const BorderRadius.all(
                                                                               Radius.circular(12.0),
                                                                             ),
                                                                             child: image!.isEmpty
-                                                                                ? Image.network(user.users[index].imageUrl )
+                                                                                ? Image.network(user.users[index].imageUrl)
                                                                                 : Image.network(image!),
                                                                           ),
                                                                   ),
@@ -358,90 +394,85 @@ class _ViewUsersScreenState extends State<ViewUsersScreen> {
                                                                           .all(
                                                                           16.0),
                                                                   child: Card(
-                                                                    child: Form(
-                                                                      key:
-                                                                          _formKey,
+                                                                    child:
+                                                                        Padding(
+                                                                      padding: const EdgeInsets
+                                                                          .all(
+                                                                          16.0),
                                                                       child:
-                                                                          Column(
-                                                                        children: [
-                                                                          FormInput(
-                                                                            initialValue: username,
-                                                                            onChangedFunction: (value) =>
-                                                                            username = value!,
-                                                                            labelText: 'Username',
-                                                                            hintText: user.users.isNotEmpty
-                                                                                ? user.users.last.username
-                                                                                : 'Enter your username',
-                                                                            validationFunction: (value) {
-                                                                              if (value == null ||
-                                                                                  value.isEmpty) {
-                                                                                return "please enter your username";
-                                                                              }
-                                                                              return null;
-                                                                            },
-                                                                            obscureText: false,
-                                                                          ),
-                                                                          FormInput(
-                                                                            initialValue: firstname,
-                                                                            onChangedFunction: (value) =>
-                                                                            firstname = value!,
-                                                                            labelText: 'Firstname',
-                                                                            hintText: 'Enter your firstname',
-                                                                            validationFunction: (value) {
-                                                                              if (value == null ||
-                                                                                  value.isEmpty) {
-                                                                                return "please enter your firstname";
-                                                                              }
-                                                                              return null;
-                                                                            },
-                                                                            obscureText: false,
-                                                                          ),
-                                                                          FormInput(
-                                                                            initialValue: lastname,
-                                                                            onChangedFunction: (value) =>
-                                                                            lastname = value!,
-                                                                            labelText: 'Lastname',
-                                                                            hintText: 'Enter your lastname',
-                                                                            validationFunction: (value) {
-                                                                              if (value == null ||
-                                                                                  value.isEmpty) {
-                                                                                return "please enter your lastname";
-                                                                              }
-                                                                              return null;
-                                                                            },
-                                                                            obscureText: false,
-                                                                          ),
-                                                                          FormInput(
-                                                                            initialValue: mobileNumber,
-                                                                            onChangedFunction: (value) =>
-                                                                            mobileNumber = value!,
-                                                                            labelText: 'Mobile-Number',
-                                                                            hintText: 'Enter your mobile-number',
-                                                                            validationFunction: (value) {
-                                                                              if (value == null ||
-                                                                                  value.isEmpty) {
-                                                                                return "please enter your mobile-number";
-                                                                              }
-                                                                              return null;
-                                                                            },
-                                                                            obscureText: false,
-                                                                          ),
-                                                                          FormInput(
-                                                                            initialValue: country,
-                                                                            onChangedFunction: (value) =>
-                                                                            country = value!,
-                                                                            labelText: 'Country',
-                                                                            hintText: 'Enter your country',
-                                                                            validationFunction: (value) {
-                                                                              if (value == null ||
-                                                                                  value.isEmpty) {
-                                                                                return "please enter your country";
-                                                                              }
-                                                                              return null;
-                                                                            },
-                                                                            obscureText: false,
-                                                                          ),
-                                                                        ],
+                                                                          Form(
+                                                                        key:
+                                                                            _formKey,
+                                                                        child:
+                                                                            Column(
+                                                                          children: [
+                                                                            FormInput(
+                                                                              initialValue: username,
+                                                                              onChangedFunction: (value) => username = value!,
+                                                                              labelText: 'Username',
+                                                                              hintText: user.users.isNotEmpty ? user.users.last.username : 'Enter your username',
+                                                                              validationFunction: (value) {
+                                                                                if (value == null || value.isEmpty) {
+                                                                                  return "please enter your username";
+                                                                                }
+                                                                                return null;
+                                                                              },
+                                                                              obscureText: false,
+                                                                            ),
+                                                                            FormInput(
+                                                                              initialValue: firstname,
+                                                                              onChangedFunction: (value) => firstname = value!,
+                                                                              labelText: 'Firstname',
+                                                                              hintText: 'Enter your firstname',
+                                                                              validationFunction: (value) {
+                                                                                if (value == null || value.isEmpty) {
+                                                                                  return "please enter your firstname";
+                                                                                }
+                                                                                return null;
+                                                                              },
+                                                                              obscureText: false,
+                                                                            ),
+                                                                            FormInput(
+                                                                              initialValue: lastname,
+                                                                              onChangedFunction: (value) => lastname = value!,
+                                                                              labelText: 'Lastname',
+                                                                              hintText: 'Enter your lastname',
+                                                                              validationFunction: (value) {
+                                                                                if (value == null || value.isEmpty) {
+                                                                                  return "please enter your lastname";
+                                                                                }
+                                                                                return null;
+                                                                              },
+                                                                              obscureText: false,
+                                                                            ),
+                                                                            FormInput(
+                                                                              initialValue: mobileNumber,
+                                                                              onChangedFunction: (value) => mobileNumber = value!,
+                                                                              labelText: 'Mobile-Number',
+                                                                              hintText: 'Enter your mobile-number',
+                                                                              validationFunction: (value) {
+                                                                                if (value == null || value.isEmpty) {
+                                                                                  return "please enter your mobile-number";
+                                                                                }
+                                                                                return null;
+                                                                              },
+                                                                              obscureText: false,
+                                                                            ),
+                                                                            FormInput(
+                                                                              initialValue: country,
+                                                                              onChangedFunction: (value) => country = value!,
+                                                                              labelText: 'Country',
+                                                                              hintText: 'Enter your country',
+                                                                              validationFunction: (value) {
+                                                                                if (value == null || value.isEmpty) {
+                                                                                  return "please enter your country";
+                                                                                }
+                                                                                return null;
+                                                                              },
+                                                                              obscureText: false,
+                                                                            ),
+                                                                          ],
+                                                                        ),
                                                                       ),
                                                                     ),
                                                                   ),
@@ -480,12 +511,12 @@ class _ViewUsersScreenState extends State<ViewUsersScreen> {
                                                                               id: user.users[index].id,
                                                                               username: username,
                                                                               email: user.users[index].email,
-                                                                              password: user.users[index].id,
+                                                                              password: user.users[index].password,
                                                                               firstname: firstname,
                                                                               lastname: lastname,
-                                                                              mobilenumber: mobileNumber,
+                                                                              mobileNumber: mobileNumber,
                                                                               country: country,
-                                                                              imageUrl: image!.isEmpty?user.users[index].imageUrl:image!,
+                                                                              imageUrl: image!.isEmpty ? user.users[index].imageUrl : image!,
                                                                             ),
                                                                           );
                                                                           Navigator.of(context)
@@ -510,15 +541,12 @@ class _ViewUsersScreenState extends State<ViewUsersScreen> {
                                                     });
                                                   });
                                             },
-                                            label: const Padding(
-                                              padding: EdgeInsets.all(16.0),
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: [
-                                                  Text('Update'),
-                                                  Icon(Icons.update_rounded),
-                                                ],
-                                              ),
+                                            label: const Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Text('Update'),
+                                                Icon(Icons.update_rounded),
+                                              ],
                                             ),
                                           ),
                                         )

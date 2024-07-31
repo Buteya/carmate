@@ -29,7 +29,7 @@ class _CreateRolesAndPermissionsState extends State<CreateRolesAndPermissions> {
   String? imageAvailable = '';
   String? selectedPermission;
   Set<String> newListPermissions = {}; // add Permission tab
-  List<String> newList = [];
+  List<Permission>? newList = [];
   final uuid = const Uuid();
 
   @override
@@ -94,7 +94,7 @@ class _CreateRolesAndPermissionsState extends State<CreateRolesAndPermissions> {
         Role(
           id: id,
           roleName: _roleController.text,
-          permissions: [],
+          permissions: newList!,
         ),
       );
 
@@ -102,7 +102,7 @@ class _CreateRolesAndPermissionsState extends State<CreateRolesAndPermissions> {
         SnackBar(
           backgroundColor: Colors.deepPurple,
           content: Text(
-            'Permission $id has been added successfully!!!',
+            'Role $id has been added successfully!!!',
             style: GoogleFonts.roboto(
               fontSize: 17,
               color: Colors.white,
@@ -116,7 +116,8 @@ class _CreateRolesAndPermissionsState extends State<CreateRolesAndPermissions> {
     for (final role in roles.roles) {
       print(role.id);
       print(role.roleName);
-      print(role.permissions);
+      print(role.permissions.last.permission);
+      print(role.permissions.last.id);
     }
   }
 
@@ -138,13 +139,16 @@ class _CreateRolesAndPermissionsState extends State<CreateRolesAndPermissions> {
                     ),
                     bottom: const TabBar(
                       tabs: [
-                        Tab(text: 'Tab 1'),
                         Tab(
-                          text: 'Role',
+                          text: 'Assign Role',
+                          icon: Icon(Icons.add_task_rounded),
+                        ),
+                        Tab(
+                          text: 'Create Role',
                           icon: Icon(Icons.sign_language_rounded),
                         ),
                         Tab(
-                          text: 'Permission',
+                          text: 'Create Permission',
                           icon: Icon(Icons.multiple_stop),
                         ),
                       ],
@@ -159,7 +163,85 @@ class _CreateRolesAndPermissionsState extends State<CreateRolesAndPermissions> {
                   body: TabBarView(
                     children: [
                       // Content for Tab 1
-                      Center(child: Text('Tab 1 Content')),
+                      SingleChildScrollView(
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            children: [
+                              Consumer2<User, Role>(builder: (
+                                context,
+                                user,
+                                role,
+                                child,
+                              ) {
+                                return SizedBox(
+                                  height: 200,
+                                  child: ListView.builder(
+                                      itemCount: user.users.length,
+                                      itemBuilder: (context, index) {
+                                        return ExpansionTile(
+                                            leading: user.users[index].imageUrl
+                                                    .isEmpty
+                                                ? const SizedBox(
+                                                    width: 50,
+                                                    child: Card(
+                                                      child: Icon(Icons.person),
+                                                    ),
+                                                  )
+                                                : SizedBox(
+                                                    width: 50,
+                                                    child: Card(
+                                                      child: Image.network(
+                                                        user.users[index]
+                                                            .imageUrl,
+                                                        width: 50,
+                                                      ),
+                                                    ),
+                                                  ),
+                                            title: Text(
+                                                user.users[index].firstname),
+                                            subtitle: Text(
+                                                user.users[index].lastname),
+                                            children: [
+                                              SizedBox(
+                                                height: 200,
+                                                child: ListView.builder(
+                                                    itemCount:
+                                                        role.roles.length,
+                                                    itemBuilder:
+                                                        (context, index) {
+                                                      return ListTile(
+                                                        title: Text(role
+                                                                .roles[index]
+                                                                .roleName
+                                                                .isEmpty
+                                                            ? ''
+                                                            : role.roles[index]
+                                                                .roleName),
+                                                        trailing:
+                                                            ElevatedButton.icon(
+                                                          onPressed: () {},
+                                                          label: const Row(
+                                                            mainAxisSize:
+                                                                MainAxisSize
+                                                                    .min,
+                                                            children: [
+                                                              Text('Add Role'),
+                                                              Icon(Icons.add)
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      );
+                                                    }),
+                                              ),
+                                            ]);
+                                      }),
+                                );
+                              })
+                            ],
+                          ),
+                        ),
+                      ),
                       // Content for Tab 2
                       SingleChildScrollView(
                         child: Card(
@@ -232,20 +314,35 @@ class _CreateRolesAndPermissionsState extends State<CreateRolesAndPermissions> {
                                             children: [
                                               Card(
                                                 child: Padding(
-                                                  padding: const EdgeInsets.all(16.0),
+                                                  padding: const EdgeInsets.all(
+                                                      16.0),
                                                   child: DropdownButton<String>(
                                                     value: selectedPermission,
                                                     onChanged: (newValue) {
                                                       setState(() {
                                                         selectedPermission =
                                                             newValue!;
-                                                        newList.add(
-                                                            selectedPermission!);
+                                                        newList!.add(Permission(
+                                                            id: Provider.of<
+                                                                        Permission>(
+                                                                    context,
+                                                                    listen:
+                                                                        false)
+                                                                .permissions
+                                                                .firstWhere((permission) =>
+                                                                    permission
+                                                                        .permission ==
+                                                                    selectedPermission)
+                                                                .id,
+                                                            permission:
+                                                                selectedPermission!));
                                                         for (final item
-                                                            in newList) {
-                                                          print(item);
+                                                            in newList!) {
+                                                          print(
+                                                              'item ${item.permission}');
                                                         }
-                                                        print(newList.length);
+                                                        print(
+                                                            "newlist ${newList!.length}");
                                                       });
                                                     },
                                                     items: newListPermissions
@@ -264,8 +361,7 @@ class _CreateRolesAndPermissionsState extends State<CreateRolesAndPermissions> {
                                           Padding(
                                             padding: const EdgeInsets.all(16.0),
                                             child: Text(
-                                              'The following permissions will be assigned to the new role: '
-                                                  ,
+                                              'The following permissions will be assigned to the new role: ',
                                               style: GoogleFonts.roboto(
                                                 fontSize: 17,
                                               ),
@@ -277,14 +373,15 @@ class _CreateRolesAndPermissionsState extends State<CreateRolesAndPermissions> {
                                               height: 200,
                                               width: 300,
                                               child: ListView.builder(
-                                                itemCount: newList.length,
+                                                itemCount: newList!.length,
                                                 itemBuilder: (context, index) {
                                                   print(index);
                                                   final permission =
-                                                      newList[index];
-                                                  print(permission.length);
+                                                      newList![index];
+                                                  print(permission.permission);
                                                   return ListTile(
-                                                    title: Text(permission),
+                                                    title: Text(
+                                                        permission.permission),
                                                     // Other list item properties (e.g., subtitle, trailing, etc.)
                                                   );
                                                 },
@@ -299,9 +396,10 @@ class _CreateRolesAndPermissionsState extends State<CreateRolesAndPermissions> {
                                     padding: const EdgeInsets.all(16.0),
                                     child: ElevatedButton.icon(
                                       onPressed: () {
-                                        if (_formPermissionsKey.currentState!
+                                        if (_formRolesKey.currentState!
                                             .validate()) {
                                           _addRole();
+                                          _formRolesKey.currentState?.reset();
                                         }
                                       },
                                       label: const Row(
@@ -376,7 +474,8 @@ class _CreateRolesAndPermissionsState extends State<CreateRolesAndPermissions> {
                                       if (_formPermissionsKey.currentState!
                                           .validate()) {
                                         _addPermission();
-                                        _formPermissionsKey.currentState?.reset();
+                                        _formPermissionsKey.currentState
+                                            ?.reset();
                                       }
                                     },
                                     label: const Row(

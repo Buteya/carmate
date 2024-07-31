@@ -70,7 +70,7 @@ class _CreateUserScreenState extends State<CreateUserScreen> {
         password: encodedPassword,
         firstname: _firstnameController.text,
         lastname: _lastnameController.text,
-        mobilenumber: _mobileNumberController.text,
+        mobileNumber: _mobileNumberController.text,
         country: _countryController.text,
         imageUrl: carImage!,
       ));
@@ -98,7 +98,7 @@ class _CreateUserScreenState extends State<CreateUserScreen> {
       print(user.firstname);
       print(user.lastname);
       print(user.email);
-      print(user.mobilenumber);
+      print(user.mobileNumber);
       print(user.country);
       print(user.password);
     }

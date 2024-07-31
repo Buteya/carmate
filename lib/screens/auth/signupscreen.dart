@@ -53,7 +53,7 @@ class _SignupScreenState extends State<SignupScreen> {
         password: encodedPassword,
         firstname: '',
         lastname: '',
-        mobilenumber: '',
+        mobileNumber: '',
         country: '',
         imageUrl: '',
       ),

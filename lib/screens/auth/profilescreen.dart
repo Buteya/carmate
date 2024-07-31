@@ -84,7 +84,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             password: currentUser!.password,
             firstname: firstname,
             lastname: lastname,
-            mobilenumber: mobileNumber,
+            mobileNumber: mobileNumber,
             country: country,
             imageUrl: imageAvailable!),
       );
@@ -95,7 +95,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       print(user.username);
       print(user.firstname);
       print(user.lastname);
-      print(user.mobilenumber);
+      print(user.mobileNumber);
       print(user.country);
       print(user.imageUrl);
     }
@@ -286,7 +286,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     var currentUserLastname =
                                         user.users.last.lastname;
                                     var currentUserMobileNumber =
-                                        user.users.last.mobilenumber;
+                                        user.users.last.mobileNumber;
                                     var currentUserCountry =
                                         user.users.last.country;
                                     for (final newuser in user.users) {
@@ -294,7 +294,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       print(newuser.username);
                                       print(newuser.firstname);
                                       print(newuser.lastname);
-                                      print(newuser.mobilenumber);
+                                      print(newuser.mobileNumber);
                                       print(newuser.country);
                                       print(newuser.imageUrl);
                                     }

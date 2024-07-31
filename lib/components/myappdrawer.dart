@@ -24,7 +24,7 @@ class MyAppDrawer extends StatelessWidget {
           decoration: const BoxDecoration(
             color: Colors.deepPurpleAccent,
           ),
-          child: GestureDetector(
+          child: InkWell(
             onTap: (){
               if(mounted){
                 Navigator.pushReplacementNamed(context, '/profile');

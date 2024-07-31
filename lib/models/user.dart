@@ -1,8 +1,7 @@
 import 'dart:collection';
 
-
+import 'package:carmate/models/roleandpermissions/role.dart';
 import 'package:flutter/material.dart';
-
 
 class User extends ChangeNotifier {
   final String id;
@@ -11,9 +10,15 @@ class User extends ChangeNotifier {
   final String password;
   final String firstname;
   final String lastname;
-  final String mobilenumber;
+  final String mobileNumber;
   final String country;
   final String imageUrl;
+  String? status;
+  Role? role = Role(
+    id: '',
+    roleName: 'user',
+    permissions: [],
+  );
 
   final List<User> _users = [];
 
@@ -26,11 +31,12 @@ class User extends ChangeNotifier {
     required this.password,
     required this.firstname,
     required this.lastname,
-    required this.mobilenumber,
+    required this.mobileNumber,
     required this.country,
     required this.imageUrl,
+    this.status = 'offline',
+    this.role,
   });
-
 
   void add(User user) {
     _users.add(user);
@@ -43,8 +49,8 @@ class User extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateUser(User updatedUser){
-    _users[_users.length-1] = updatedUser;
+  void updateUser(User updatedUser) {
+    _users[_users.length - 1] = updatedUser;
     notifyListeners();
   }
 
