@@ -55,13 +55,61 @@ class _CreateRolesAndPermissionsState extends State<CreateRolesAndPermissions> {
   void _addPermission() {
     final permissions = Provider.of<Permission>(context, listen: false);
     final id = uuid.v4();
-    if (currentUser?.id != null) {
+    bool?  permissionBool;
+    try {
+       permissionBool = permissions.permissions.firstWhere(
+            (item) => item.permission == _permissionController.text,
+      ).permission != _permissionController.text;
+      // Element found, handle it
+       ScaffoldMessenger.of(context).showSnackBar(
+         SnackBar(
+           backgroundColor: Colors.deepPurple,
+           content: Text(
+             'Permission already exists!!!',
+             style: GoogleFonts.roboto(
+               fontSize: 17,
+               color: Colors.white,
+             ),
+           ),
+         ),
+       );
+       print('permission already exists');
+    } catch (e) {
+      // Element not found, handle the absence
       permissions.add(
         Permission(
           id: id,
           permission: _permissionController.text,
         ),
       );
+      print('No matching element: $e');
+    }
+
+    if (currentUser?.id != null) {
+      if (permissions.permissions.isEmpty
+          ) {
+        permissions.add(
+          Permission(
+            id: id,
+            permission: _permissionController.text,
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: Colors.deepPurple,
+            content: Text(
+              'Failed to create permission!!!',
+              style: GoogleFonts.roboto(
+                fontSize: 17,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        );
+        print('Failed to create permission');
+      }
+
       newListPermissions.add(_permissionController.text);
       print(newListPermissions);
 
@@ -81,15 +129,37 @@ class _CreateRolesAndPermissionsState extends State<CreateRolesAndPermissions> {
       print('no current user');
     }
     for (final permission in permissions.permissions) {
-      print(permission.id);
-      print(permission.permission);
+      print('function addPermission permissionId:${permission.id}');
+      print('function addPermission permission:${permission.permission}');
     }
   }
 
   void _addRole() {
     final roles = Provider.of<Role>(context, listen: false);
     final id = uuid.v4();
-    if (currentUser?.id != null) {
+    bool? roleBool;
+    try {
+      roleBool = roles.roles
+          .firstWhere((role) => role.roleName == _roleController.text)
+          .roleName
+          !=
+          _roleController.text;
+      // Element found, handle it
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.deepPurple,
+          content: Text(
+            'Role already exists!!!',
+            style: GoogleFonts.roboto(
+              fontSize: 17,
+              color: Colors.white,
+            ),
+          ),
+        ),
+      );
+      print('Role already exists');
+    } catch (e) {
+      // Element not found, handle the absence
       roles.add(
         Role(
           id: id,
@@ -97,6 +167,32 @@ class _CreateRolesAndPermissionsState extends State<CreateRolesAndPermissions> {
           permissions: newList!,
         ),
       );
+      print('No matching element: $e');
+    }
+    if (currentUser?.id != null) {
+      if (roles.roles.isEmpty) {
+        roles.add(
+          Role(
+            id: id,
+            roleName: _roleController.text,
+            permissions: newList!,
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: Colors.deepPurple,
+            content: Text(
+              'Failed to create role!!!',
+              style: GoogleFonts.roboto(
+                fontSize: 17,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        );
+        print('failed to create role');
+      }
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -114,11 +210,78 @@ class _CreateRolesAndPermissionsState extends State<CreateRolesAndPermissions> {
       print('no current user');
     }
     for (final role in roles.roles) {
-      print(role.id);
-      print(role.roleName);
-      print(role.permissions.last.permission);
-      print(role.permissions.last.id);
+      print('functionAddRole roleId: ${role.id}');
+      print('functionAddRole roleName: ${role.roleName}');
+      for (final item in role.permissions) {
+        print('functionAddRole permissionId: ${item.id}');
+        print('functionAddRole permission: ${item.permission}');
+      }
     }
+  }
+
+  void _addRoleToUser(
+      int index, String roleId, String roleName, List<Permission> permissions) {
+    final users = Provider.of<User>(context, listen: false);
+    if (currentUser?.id != null) {
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: Colors.deepPurple,
+            content: Text(
+              'Replacing role for user ${users.users[index].id}!!!',
+              style: GoogleFonts.roboto(
+                fontSize: 17,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        );
+        users.updateSingleUser(
+            User(
+                id: users.users[index].id,
+                username: users.users[index].username,
+                email: users.users[index].email,
+                password: users.users[index].password,
+                firstname: users.users[index].firstname,
+                lastname: users.users[index].lastname,
+                mobileNumber: users.users[index].mobileNumber,
+                country: users.users[index].country,
+                imageUrl: users.users[index].imageUrl,
+                role: Role(
+                    id: roleId, roleName: roleName, permissions: permissions)),
+            index);
+
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.deepPurple,
+          content: Text(
+            'Role ${users.users[index].role?.id} has been added to user ${users.users[index].id} successfully!!!',
+            style: GoogleFonts.roboto(
+              fontSize: 17,
+              color: Colors.white,
+            ),
+          ),
+        ),
+      );
+    } else {
+      print('no current user');
+    }
+
+    for (final user in users.users) {
+      print(user.id);
+      print(user.username);
+      print(user.email);
+      print(user.password);
+      print('user roleId: ${user.role?.id}');
+      print('user roleName: ${user.role?.roleName}');
+      print('user permissions list: ${user.role!.permissions.length}');
+      for (final item in user.role!.permissions) {
+        print(item.id);
+        print(item.permission);
+      }
+    }
+    print(users.users.length);
   }
 
   @override
@@ -174,14 +337,20 @@ class _CreateRolesAndPermissionsState extends State<CreateRolesAndPermissions> {
                                 role,
                                 child,
                               ) {
+                                for (final role in role.roles) {
+                                  print(role.permissions.length);
+                                  for (final item in role.permissions) {
+                                    print(item.permission);
+                                  }
+                                }
                                 return SizedBox(
                                   height: 200,
                                   child: ListView.builder(
                                       itemCount: user.users.length,
-                                      itemBuilder: (context, index) {
+                                      itemBuilder: (context, indexUser) {
                                         return ExpansionTile(
-                                            leading: user.users[index].imageUrl
-                                                    .isEmpty
+                                            leading: user.users[indexUser]
+                                                    .imageUrl.isEmpty
                                                 ? const SizedBox(
                                                     width: 50,
                                                     child: Card(
@@ -192,16 +361,16 @@ class _CreateRolesAndPermissionsState extends State<CreateRolesAndPermissions> {
                                                     width: 50,
                                                     child: Card(
                                                       child: Image.network(
-                                                        user.users[index]
+                                                        user.users[indexUser]
                                                             .imageUrl,
                                                         width: 50,
                                                       ),
                                                     ),
                                                   ),
-                                            title: Text(
-                                                user.users[index].firstname),
+                                            title: Text(user
+                                                .users[indexUser].firstname),
                                             subtitle: Text(
-                                                user.users[index].lastname),
+                                                user.users[indexUser].lastname),
                                             children: [
                                               SizedBox(
                                                 height: 200,
@@ -220,7 +389,25 @@ class _CreateRolesAndPermissionsState extends State<CreateRolesAndPermissions> {
                                                                 .roleName),
                                                         trailing:
                                                             ElevatedButton.icon(
-                                                          onPressed: () {},
+                                                          onPressed: () {
+                                                            print('pressed');
+                                                            _addRoleToUser(
+                                                                user.users.indexOf(
+                                                                    user.users[
+                                                                        indexUser]),
+                                                                role
+                                                                    .roles[
+                                                                        index]
+                                                                    .id,
+                                                                role
+                                                                    .roles[
+                                                                        index]
+                                                                    .roleName,
+                                                                role
+                                                                    .roles[
+                                                                        index]
+                                                                    .permissions);
+                                                          },
                                                           label: const Row(
                                                             mainAxisSize:
                                                                 MainAxisSize
@@ -332,7 +519,7 @@ class _CreateRolesAndPermissionsState extends State<CreateRolesAndPermissions> {
                                                                 .firstWhere((permission) =>
                                                                     permission
                                                                         .permission ==
-                                                                    selectedPermission)
+                                                                    selectedPermission!)
                                                                 .id,
                                                             permission:
                                                                 selectedPermission!));
@@ -374,14 +561,22 @@ class _CreateRolesAndPermissionsState extends State<CreateRolesAndPermissions> {
                                               width: 300,
                                               child: ListView.builder(
                                                 itemCount: newList!.length,
-                                                itemBuilder: (context, index) {
-                                                  print(index);
+                                                itemBuilder: (context, indexNewList) {
+                                                  print(indexNewList);
                                                   final permission =
-                                                      newList![index];
+                                                      newList![indexNewList];
                                                   print(permission.permission);
                                                   return ListTile(
-                                                    title: Text(
-                                                        permission.permission),
+                                                    title: Text(newList![indexNewList]
+                                                        .permission),
+                                                    trailing: TextButton.icon(
+                                                        onPressed: () {
+                                                          setState((){
+                                                            newList!.removeAt(indexNewList);
+                                                          });
+                                                        },
+                                                        label: const Icon(Icons
+                                                            .close_rounded)),
                                                     // Other list item properties (e.g., subtitle, trailing, etc.)
                                                   );
                                                 },
@@ -400,6 +595,9 @@ class _CreateRolesAndPermissionsState extends State<CreateRolesAndPermissions> {
                                             .validate()) {
                                           _addRole();
                                           _formRolesKey.currentState?.reset();
+                                          setState(() {
+                                            // newList!.clear();
+                                          });
                                         }
                                       },
                                       label: const Row(

@@ -54,6 +54,11 @@ class User extends ChangeNotifier {
     notifyListeners();
   }
 
+  void updateSingleUser(User updatedUser,int index){
+    _users[index]= updatedUser;
+    notifyListeners();
+  }
+
   void removeAll() {
     _users.clear();
     // This call tells the widgets that are listening to this model to rebuild.
