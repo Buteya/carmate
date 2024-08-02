@@ -146,6 +146,19 @@ class MyAppDrawer extends StatelessWidget {
             }
           },
         ),
+        ListTile(
+          title: const Text('View Roles and Permissions'),
+          subtitle: const Text(
+              'view user roles and permissions'),
+          trailing: const Icon(Icons.playlist_add_check_circle_outlined),
+          onTap: () {
+            // Handle item 2 tap
+            if (mounted) {
+              Navigator.pushReplacementNamed(
+                  context, '/viewrolesandpermissions');
+            }
+          },
+        ),
       ],
     );
   }
