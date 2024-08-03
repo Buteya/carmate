@@ -31,6 +31,7 @@ class _CreateRolesAndPermissionsState extends State<CreateRolesAndPermissions> {
   Set<String> newListPermissions = {}; // add Permission tab
   List<Permission>? newList = [];
   final uuid = const Uuid();
+  bool? _addRolePressed = false;
 
   @override
   void initState() {
@@ -566,7 +567,7 @@ class _CreateRolesAndPermissionsState extends State<CreateRolesAndPermissions> {
                                                   final permission =
                                                       newList![indexNewList];
                                                   print(permission.permission);
-                                                  return ListTile(
+                                                  return _addRolePressed!? SizedBox():ListTile(
                                                     title: Text(newList![indexNewList]
                                                         .permission),
                                                     trailing: TextButton.icon(
@@ -597,6 +598,7 @@ class _CreateRolesAndPermissionsState extends State<CreateRolesAndPermissions> {
                                           _formRolesKey.currentState?.reset();
                                           setState(() {
                                             // newList!.clear();
+                                            _addRolePressed = true;
                                           });
                                         }
                                       },
