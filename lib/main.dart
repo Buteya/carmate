@@ -12,6 +12,7 @@ import 'package:carmate/screens/auth/loginscreen.dart';
 import 'package:carmate/screens/auth/passwordresetscreen.dart';
 import 'package:carmate/screens/auth/profilescreen.dart';
 import 'package:carmate/screens/auth/signupscreen.dart';
+import 'package:carmate/screens/product/productdisplaymainscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -92,6 +93,7 @@ class MyApp extends StatelessWidget {
         '/createuser': (context)=> const CreateUserScreen(),
         '/addrolespermissions':(context)=> const CreateRolesAndPermissions(),
         '/viewrolesandpermissions': (context)=> const ViewRolesAndPermissionsScreen(),
+        '/productdisplay':(context)=> const ProductDisplayMainScreen(),
       },
     );
   }

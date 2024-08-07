@@ -25,6 +25,7 @@ class _ViewRolesAndPermissionsScreenState
   User? currentUser;
   String? imageAvailable = '';
   bool _isLoading = false;
+  String? dropdownValue;
 
   @override
   void initState() {
@@ -76,8 +77,8 @@ class _ViewRolesAndPermissionsScreenState
                     children: [
                       //tab 1 view
                       SingleChildScrollView(
-                        child: Consumer2<User, Role>(
-                            builder: (context, user, role, consumerIndex) {
+                        child: Consumer3<User, Role,Permission>(
+                            builder: (context, user, role,perm, consumerIndex) {
                           return Padding(
                             padding: const EdgeInsets.all(16.0),
                             child: SizedBox(
@@ -87,6 +88,8 @@ class _ViewRolesAndPermissionsScreenState
                                   itemBuilder: (context, index) {
                                     var editRoleName =
                                         role.roles[index].roleName;
+                                    var editRolePermissions =
+                                        role.roles[index].permissions;
                                     return Dismissible(
                                       key: Key(role.roles[index].id),
                                       background: Container(
@@ -390,13 +393,39 @@ class _ViewRolesAndPermissionsScreenState
                                                                             obscureText:
                                                                                 false,
                                                                           ),
+                                                                          Padding(
+                                                                            padding: const EdgeInsets.all(8.0),
+                                                                            child: Row(
+                                                                              mainAxisSize: MainAxisSize.min,
+                                                                              mainAxisAlignment: MainAxisAlignment.start,
+                                                                              children: [
+                                                                                const Text('Add permission: '),
+                                                                                DropdownButton<String>(
+                                                                                  value: dropdownValue,
+                                                                                  onChanged: (String? newValue) {
+                                                                                    final permissi = perm.permissions.firstWhere((perm)=>perm.permission == newValue);
+                                                                                    setState(() {
+
+                                                                                      dropdownValue = newValue!;// Update the selected value
+                                                                                    });  role.roles[index].permissions.add(permissi);
+                                                                                  },
+                                                                                  items: perm.permissions.map((item) {
+                                                                                    return DropdownMenuItem<String>(
+                                                                                      value: item.permission.toString(),
+                                                                                      child: Text(item.permission.toString()),
+                                                                                    );
+                                                                                  }).toList(),
+                                                                                ),
+                                                                              ],
+                                                                            ),
+                                                                          ),
                                                                           Row(
                                                                             mainAxisSize:
                                                                                 MainAxisSize.min,
                                                                             mainAxisAlignment:
-                                                                                MainAxisAlignment.spaceEvenly,
+                                                                                MainAxisAlignment.start,
                                                                             children: [
-                                                                              Text('Permissions: '),
+                                                                              const Text('Permissions: '),
                                                                               Card(
                                                                                 child: Column(
                                                                                   mainAxisSize: MainAxisSize.min,
@@ -409,7 +438,13 @@ class _ViewRolesAndPermissionsScreenState
                                                                                           children: [
                                                                                             Text(permission.permission),
                                                                                             TextButton.icon(
-                                                                                              onPressed: () {},
+                                                                                              onPressed: () {
+                                                                                                final permissions = role.roles[index].permissions;
+                                                                                                setState(() {
+                                                                                                  editRolePermissions.removeAt(index);
+                                                                                                });
+                                                                                                role.updateRole(Role(id: role.roles[index].id, roleName: role.roles[index].roleName, permissions: editRolePermissions), index);
+                                                                                              },
                                                                                               label: const Icon(Icons.close_rounded),
                                                                                             ),
                                                                                           ],
@@ -421,8 +456,10 @@ class _ViewRolesAndPermissionsScreenState
                                                                             ],
                                                                           ),
                                                                           Padding(
-                                                                            padding: const EdgeInsets.all(16.0),
-                                                                            child: Row(
+                                                                            padding:
+                                                                                const EdgeInsets.all(16.0),
+                                                                            child:
+                                                                                Row(
                                                                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                                                               children: [
                                                                                 ElevatedButton.icon(
@@ -438,7 +475,11 @@ class _ViewRolesAndPermissionsScreenState
                                                                                 ),
                                                                                 ElevatedButton.icon(
                                                                                   onPressed: () {
-
+                                                                                    if (role.roles[index].permissions.isEmpty) {
+                                                                                      role.removeRole(index);
+                                                                                    } else {
+                                                                                      role.updateRole(Role(id: role.roles[index].id, roleName: editRoleName, permissions: editRolePermissions), index);
+                                                                                    }
                                                                                     Navigator.of(context).pop();
                                                                                   },
                                                                                   label: const Row(

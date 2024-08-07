@@ -248,6 +248,7 @@ class _CreateRolesAndPermissionsState extends State<CreateRolesAndPermissions> {
                 mobileNumber: users.users[index].mobileNumber,
                 country: users.users[index].country,
                 imageUrl: users.users[index].imageUrl,
+                status: users.users[index].status,
                 role: Role(
                     id: roleId, roleName: roleName, permissions: permissions)),
             index);

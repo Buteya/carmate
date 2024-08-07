@@ -159,6 +159,31 @@ class MyAppDrawer extends StatelessWidget {
             }
           },
         ),
+        const Padding(
+          padding: EdgeInsets.only(
+            left: 8.0,
+          ),
+          child: Text('CarMate'),
+        ),
+        const Divider(
+          indent: 50.0,
+          color: Colors.black,
+          thickness: 1.0,
+          endIndent: 10,
+        ),
+        ListTile(
+          title: const Text('View Cars'),
+          subtitle: const Text(
+              'view buy or rent cars'),
+          trailing: const Icon(Icons.car_rental_rounded),
+          onTap: () {
+            // Handle item 2 tap
+            if (mounted) {
+              Navigator.pushReplacementNamed(
+                  context, '/productdisplay');
+            }
+          },
+        ),
       ],
     );
   }
