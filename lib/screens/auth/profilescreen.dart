@@ -236,7 +236,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           child: ElevatedButton.icon(
                             onPressed: () async {
                               final pickedImage = await ImagePicker()
-                                  .pickImage(source: ImageSource.gallery);
+                                  .pickImage(source: ImageSource.gallery,preferredCameraDevice: CameraDevice.front);
                               if (pickedImage != null) {
                                 setState(() {
                                   print(pickedImage.name);
