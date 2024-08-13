@@ -80,41 +80,50 @@ class _ProductDisplayMainScreenState extends State<ProductDisplayMainScreen> {
                                 ),
                                 itemCount: car.productCars.length,
                                 itemBuilder: (context, index) {
-                                  return Card(
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        ClipRRect(
-                                          borderRadius: const BorderRadius.vertical(
-                                            top: Radius.circular(12.0),
-                                          ), // Adjust the radius as needed
-                                          child: Image.network(
-                                            car.productCars[index].carImage,
-                                            fit: BoxFit.cover,
+                                  return InkWell(
+                                    onTap: (){
+                                      if(mounted){
+                                        Navigator.pushReplacementNamed(context, '/singleproductdisplay',arguments: index);
+                                      }
+                                    },
+                                    child: Card(
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          ClipRRect(
+                                            borderRadius: const BorderRadius.vertical(
+                                              top: Radius.circular(12.0),
+                                            ), // Adjust the radius as needed
+                                            child: Image.network(
+                                              car.productCars[index].carImage,
+                                              fit: BoxFit.cover,
+                                            ),
                                           ),
-                                        ),
-                                        Text(
-                                          car.productCars[index].carName,
-                                          style: GoogleFonts.roboto(
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        Text(
-                                          'KSH ${NumberFormat.decimalPatternDigits(
-                                            locale:
-                                                'en_US', // Specify the desired locale
-                                            // decimalDigits:
-                                            //     2, // Set the number of decimal places
-                                          ).format(
-                                            car.productCars[index].price,
-                                          )}',
-                                        ),
-                                      ],
+                                          Text(
+                                            car.productCars[index].carName,
+                                            style: GoogleFonts.roboto(
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          Text(
+                                            'KSH ${NumberFormat.decimalPatternDigits(
+                                              locale:
+                                                  'en_US', // Specify the desired locale
+                                              // decimalDigits:
+                                              //     2, // Set the number of decimal places
+                                            ).format(
+                                              car.productCars[index].price,
+                                            )}',
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   );
                                 }),
                           );
                         }),
                       ),
+                      //tabview 2
+                      const Text('No orders yet')
                     ],
                   ),
                 ),
