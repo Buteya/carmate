@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import '../../components/badroute.dart';
@@ -22,7 +23,6 @@ class _SingleProductDisplayScreenState
   final bool _isLoading = false;
   String? image = '';
 
-
   @override
   void initState() {
     try {
@@ -33,7 +33,6 @@ class _SingleProductDisplayScreenState
     }
     super.initState();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -58,13 +57,145 @@ class _SingleProductDisplayScreenState
                 ),
                 body: SingleChildScrollView(
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(Provider.of<ProductCar>(context, listen: false)
-                          .productCars[(ModalRoute.of(context)!.settings.arguments as int) ]
-                          .carName),
-                      Image.network(Provider.of<ProductCar>(context, listen: false)
-                          .productCars[(ModalRoute.of(context)!.settings.arguments as int)]
-                          .carImage)
+                      Text(
+                        Provider.of<ProductCar>(context, listen: false)
+                            .productCars[(ModalRoute.of(context)!
+                                .settings
+                                .arguments as int)]
+                            .carName,
+                        style: GoogleFonts.roboto(
+                            fontSize: 30, fontWeight: FontWeight.bold),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Card(
+                          child: Image.network(
+                              Provider.of<ProductCar>(context, listen: false)
+                                  .productCars[(ModalRoute.of(context)!
+                                      .settings
+                                      .arguments as int)]
+                                  .carImage),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text(
+                          Provider.of<ProductCar>(context, listen: false)
+                              .productCars[(ModalRoute.of(context)!
+                                  .settings
+                                  .arguments as int)]
+                              .description,
+                          style: GoogleFonts.roboto(
+                            fontSize: 20,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text(
+                          Provider.of<ProductCar>(context, listen: false)
+                              .productCars[(ModalRoute.of(context)!
+                              .settings
+                              .arguments as int)]
+                              .price.toString(),
+                          style: GoogleFonts.roboto(
+                            fontSize: 20,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text(
+                          Provider.of<ProductCar>(context, listen: false)
+                              .productCars[(ModalRoute.of(context)!
+                              .settings
+                              .arguments as int)]
+                              .rentPerHr.toString(),
+                          style: GoogleFonts.roboto(
+                            fontSize: 20,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text(
+                          Provider.of<ProductCar>(context, listen: false)
+                              .productCars[(ModalRoute.of(context)!
+                              .settings
+                              .arguments as int)]
+                              .manufacturer,
+                          style: GoogleFonts.roboto(
+                            fontSize: 20,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text(
+                          Provider.of<ProductCar>(context, listen: false)
+                              .productCars[(ModalRoute.of(context)!
+                              .settings
+                              .arguments as int)]
+                              .status,
+                          style: GoogleFonts.roboto(
+                            fontSize: 20,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text(
+                          Provider.of<ProductCar>(context, listen: false)
+                              .productCars[(ModalRoute.of(context)!
+                              .settings
+                              .arguments as int)]
+                              .carType,
+                          style: GoogleFonts.roboto(
+                            fontSize: 20,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text(
+                          Provider.of<ProductCar>(context, listen: false)
+                              .productCars[(ModalRoute.of(context)!
+                              .settings
+                              .arguments as int)]
+                              .fuelType,
+                          style: GoogleFonts.roboto(
+                            fontSize: 20,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text(
+                          Provider.of<ProductCar>(context, listen: false)
+                              .productCars[(ModalRoute.of(context)!
+                              .settings
+                              .arguments as int)]
+                              .engineType,
+                          style: GoogleFonts.roboto(
+                            fontSize: 20,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text(
+                          Provider.of<ProductCar>(context, listen: false)
+                              .productCars[(ModalRoute.of(context)!
+                              .settings
+                              .arguments as int)]
+                              .engineCC.toString(),
+                          style: GoogleFonts.roboto(
+                            fontSize: 20,
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
