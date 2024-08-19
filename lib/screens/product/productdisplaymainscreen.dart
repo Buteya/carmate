@@ -83,7 +83,7 @@ class _ProductDisplayMainScreenState extends State<ProductDisplayMainScreen> {
                                   return InkWell(
                                     onTap: (){
                                       if(mounted){
-                                        Navigator.pushReplacementNamed(context, '/singleproductdisplay',arguments: index);
+                                        Navigator.pushNamed(context, '/singleproductdisplay',arguments: index);
                                       }
                                     },
                                     child: Card(

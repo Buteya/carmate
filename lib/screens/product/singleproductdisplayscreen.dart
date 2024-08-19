@@ -48,6 +48,18 @@ class _SingleProductDisplayScreenState
                   title: const CustomTitle(
                     color: Colors.deepPurpleAccent,
                   ),
+                  actions: [
+                    Builder(
+                      builder: (BuildContext context) {
+                        return IconButton(
+                          icon: const Icon(Icons.arrow_back),
+                          onPressed: () {
+                            Navigator.pop(context); // Navigate back
+                          },
+                        );
+                      },
+                    ),
+                  ],
                 ),
                 drawer: Drawer(
                   child: MyAppDrawer(
@@ -74,6 +86,7 @@ class _SingleProductDisplayScreenState
                           onPressed: () {},
                           label: const Row(
                             mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text("add to cart"),
                               Icon(Icons.add_shopping_cart)
@@ -94,7 +107,8 @@ class _SingleProductDisplayScreenState
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Text("Description",
+                        child: Text(
+                          "Description",
                           style: GoogleFonts.roboto(
                             fontSize: 25,
                             fontWeight: FontWeight.bold,
@@ -116,7 +130,8 @@ class _SingleProductDisplayScreenState
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Text("Price",
+                        child: Text(
+                          "Price",
                           style: GoogleFonts.roboto(
                             fontSize: 25,
                             fontWeight: FontWeight.bold,
@@ -139,7 +154,8 @@ class _SingleProductDisplayScreenState
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Text("Rent per hour",
+                        child: Text(
+                          "Rent per hour",
                           style: GoogleFonts.roboto(
                             fontSize: 25,
                             fontWeight: FontWeight.bold,
@@ -162,7 +178,8 @@ class _SingleProductDisplayScreenState
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Text("Manufacturer",
+                        child: Text(
+                          "Manufacturer",
                           style: GoogleFonts.roboto(
                             fontSize: 25,
                             fontWeight: FontWeight.bold,
@@ -184,7 +201,8 @@ class _SingleProductDisplayScreenState
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Text("Status",
+                        child: Text(
+                          "Status",
                           style: GoogleFonts.roboto(
                             fontSize: 25,
                             fontWeight: FontWeight.bold,
@@ -206,7 +224,8 @@ class _SingleProductDisplayScreenState
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Text("Type of car",
+                        child: Text(
+                          "Type of car",
                           style: GoogleFonts.roboto(
                             fontSize: 25,
                             fontWeight: FontWeight.bold,
@@ -228,7 +247,8 @@ class _SingleProductDisplayScreenState
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Text("Fuel",
+                        child: Text(
+                          "Fuel",
                           style: GoogleFonts.roboto(
                             fontSize: 25,
                             fontWeight: FontWeight.bold,
@@ -250,7 +270,8 @@ class _SingleProductDisplayScreenState
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Text("Type of engine",
+                        child: Text(
+                          "Type of engine",
                           style: GoogleFonts.roboto(
                             fontSize: 25,
                             fontWeight: FontWeight.bold,
@@ -272,7 +293,8 @@ class _SingleProductDisplayScreenState
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Text("Engine cc",
+                        child: Text(
+                          "Engine cc",
                           style: GoogleFonts.roboto(
                             fontSize: 25,
                             fontWeight: FontWeight.bold,
