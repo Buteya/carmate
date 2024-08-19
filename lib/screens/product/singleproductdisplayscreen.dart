@@ -66,7 +66,20 @@ class _SingleProductDisplayScreenState
                                 .arguments as int)]
                             .carName,
                         style: GoogleFonts.roboto(
-                            fontSize: 30, fontWeight: FontWeight.bold),
+                            fontSize: 35, fontWeight: FontWeight.bold),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ElevatedButton.icon(
+                          onPressed: () {},
+                          label: const Row(
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Text("add to cart"),
+                              Icon(Icons.add_shopping_cart)
+                            ],
+                          ),
+                        ),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(16.0),
@@ -77,6 +90,15 @@ class _SingleProductDisplayScreenState
                                       .settings
                                       .arguments as int)]
                                   .carImage),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text("Description",
+                          style: GoogleFonts.roboto(
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                       Padding(
@@ -93,15 +115,11 @@ class _SingleProductDisplayScreenState
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Text(
-                          Provider.of<ProductCar>(context, listen: false)
-                              .productCars[(ModalRoute.of(context)!
-                              .settings
-                              .arguments as int)]
-                              .price.toString(),
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text("Price",
                           style: GoogleFonts.roboto(
-                            fontSize: 20,
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
@@ -110,11 +128,21 @@ class _SingleProductDisplayScreenState
                         child: Text(
                           Provider.of<ProductCar>(context, listen: false)
                               .productCars[(ModalRoute.of(context)!
-                              .settings
-                              .arguments as int)]
-                              .rentPerHr.toString(),
+                                  .settings
+                                  .arguments as int)]
+                              .price
+                              .toString(),
                           style: GoogleFonts.roboto(
                             fontSize: 20,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text("Rent per hour",
+                          style: GoogleFonts.roboto(
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
@@ -123,8 +151,31 @@ class _SingleProductDisplayScreenState
                         child: Text(
                           Provider.of<ProductCar>(context, listen: false)
                               .productCars[(ModalRoute.of(context)!
-                              .settings
-                              .arguments as int)]
+                                  .settings
+                                  .arguments as int)]
+                              .rentPerHr
+                              .toString(),
+                          style: GoogleFonts.roboto(
+                            fontSize: 20,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text("Manufacturer",
+                          style: GoogleFonts.roboto(
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text(
+                          Provider.of<ProductCar>(context, listen: false)
+                              .productCars[(ModalRoute.of(context)!
+                                  .settings
+                                  .arguments as int)]
                               .manufacturer,
                           style: GoogleFonts.roboto(
                             fontSize: 20,
@@ -132,12 +183,21 @@ class _SingleProductDisplayScreenState
                         ),
                       ),
                       Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text("Status",
+                          style: GoogleFonts.roboto(
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      Padding(
                         padding: const EdgeInsets.all(16.0),
                         child: Text(
                           Provider.of<ProductCar>(context, listen: false)
                               .productCars[(ModalRoute.of(context)!
-                              .settings
-                              .arguments as int)]
+                                  .settings
+                                  .arguments as int)]
                               .status,
                           style: GoogleFonts.roboto(
                             fontSize: 20,
@@ -145,12 +205,21 @@ class _SingleProductDisplayScreenState
                         ),
                       ),
                       Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text("Type of car",
+                          style: GoogleFonts.roboto(
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      Padding(
                         padding: const EdgeInsets.all(16.0),
                         child: Text(
                           Provider.of<ProductCar>(context, listen: false)
                               .productCars[(ModalRoute.of(context)!
-                              .settings
-                              .arguments as int)]
+                                  .settings
+                                  .arguments as int)]
                               .carType,
                           style: GoogleFonts.roboto(
                             fontSize: 20,
@@ -158,12 +227,21 @@ class _SingleProductDisplayScreenState
                         ),
                       ),
                       Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text("Fuel",
+                          style: GoogleFonts.roboto(
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      Padding(
                         padding: const EdgeInsets.all(16.0),
                         child: Text(
                           Provider.of<ProductCar>(context, listen: false)
                               .productCars[(ModalRoute.of(context)!
-                              .settings
-                              .arguments as int)]
+                                  .settings
+                                  .arguments as int)]
                               .fuelType,
                           style: GoogleFonts.roboto(
                             fontSize: 20,
@@ -171,15 +249,11 @@ class _SingleProductDisplayScreenState
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Text(
-                          Provider.of<ProductCar>(context, listen: false)
-                              .productCars[(ModalRoute.of(context)!
-                              .settings
-                              .arguments as int)]
-                              .engineType,
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text("Type of engine",
                           style: GoogleFonts.roboto(
-                            fontSize: 20,
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
@@ -188,9 +262,32 @@ class _SingleProductDisplayScreenState
                         child: Text(
                           Provider.of<ProductCar>(context, listen: false)
                               .productCars[(ModalRoute.of(context)!
-                              .settings
-                              .arguments as int)]
-                              .engineCC.toString(),
+                                  .settings
+                                  .arguments as int)]
+                              .engineType,
+                          style: GoogleFonts.roboto(
+                            fontSize: 20,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text("Engine cc",
+                          style: GoogleFonts.roboto(
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text(
+                          Provider.of<ProductCar>(context, listen: false)
+                              .productCars[(ModalRoute.of(context)!
+                                  .settings
+                                  .arguments as int)]
+                              .engineCC
+                              .toString(),
                           style: GoogleFonts.roboto(
                             fontSize: 20,
                           ),
